@@ -52,7 +52,11 @@
 							</div>
 						{% endif %}
 					<hr>
-					<input id="shipping-btn" type="button" class="btn btn-success btn-block" type="submit" value="Continue">
+					{% if items %}
+						<input id="shipping-btn" type="button" class="btn btn-success btn-block" type="submit" value="Continue">
+					{% else %}
+						<input id="shipping-btn" type="button" class="btn btn-success btn-block {% if items %}{% else %}disabled{% endif %}" type="submit" disabled value="Continue">
+					{% endif %}
 				</form>
 			</div>
 
@@ -60,7 +64,7 @@
 			<div class="box-element hidden" id="payment-info">
 				<small>Paypal Options</small><br>
 				<button class="btn btn-success btn-block" id="make-payment">
-					Make Payment
+					Make Payment (Work In Progress)
 				</button>
 			</div>
 			
@@ -72,15 +76,20 @@
 				<hr>
 				<h3>Order Summary</h3>
 				<hr>
-				{% for item in items %}
-					<div class="cart-row">
-						<div style="flex:2"><img class="row-image" src="{{ item.product.get_image_url }}"></div>
-						<div style="flex:2"><p> {{item.product.name}} </p></div>
-						<div style="flex:1"><p>Rs. {{item.product.price}}</p></div>
-						<div style="flex:1"><p>x{{item.quantity}}</p></div>
-					</div>
-				{% endfor %}
-				<hr>
+				{% if items %}
+					{% for item in items %}
+						<div class="cart-row">
+							<div style="flex:2"><img class="row-image" src="{{ item.product.get_image_url }}"></div>
+							<div style="flex:2"><p> {{item.product.name}} </p></div>
+							<div style="flex:1"><p>Rs. {{item.product.price}}</p></div>
+							<div style="flex:1"><p>x{{item.quantity}}</p></div>
+						</div>
+					{% endfor %}
+					<hr>
+				{% else %}
+					<div class="cart-row"><p style="text-align: center;margin:auto;font-weight:bolder;">No Item in your Cart</p></div>
+				{% endif %}
+
 				<h5 style="margin:0 25px;">Items:  <p style="float:right;"> {{order.get_total_items}}</p></h5>
 				<h5 style="margin:0 25px;">Total:  <p style="float:right;">  Rs. {{order.get_cart_total | floatformat:2}}</p></h5>
 			</div>

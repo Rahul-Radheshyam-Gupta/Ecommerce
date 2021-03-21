@@ -68,7 +68,7 @@ body{
     <div>
         <div class="row">
             <div class="col-md-4">
-                <form method="POST" data-toggle="validate" style="max-width:500px;margin:auto;border:1px;">
+                <form method="POST" data-toggle="validate" action="{% url 'login' %}" style="max-width:500px;margin:auto;border:1px;">
                     <h2 style="color:white;font-weight:bolder;">Login </h2>
                     <br>
                     {% csrf_token %} 
@@ -78,7 +78,7 @@ body{
                     </div>   
                     <div class="input-container">
                       <i class="fa fa-key icon"></i>
-                      <input class="input-field" type="password" placeholder="Password" name="password1" required>
+                      <input class="input-field" type="password" placeholder="Password" name="password" required>
                     </div>
                     <p class="error {% if not error %} hidden{% endif %}">{{error}}</p>
                     <button type="submit" class="btn mt-1">Login</button>

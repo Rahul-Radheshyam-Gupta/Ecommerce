@@ -68,7 +68,7 @@ body{
     <div>
         <div class="row">
             <div class="col-md-4">
-                <form method="POST" id="signup-form" data-toggle="validate" style="max-width:500px;margin:auto;border:1px;">
+                <form method="POST" id="signup-form" action="{% url 'registration' %}" data-toggle="validate" style="max-width:500px;margin:auto;border:1px;">
                     <h2 style="color:white;font-weight:bolder;">Sign Up </h2>
                     <br>
                     {% csrf_token %}
