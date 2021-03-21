@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 import re
 from django.contrib.auth import authenticate,login
 from django.contrib import messages
+# new branch create for email confirmation feature
 def registeration(request):
     error = {}
     if request.method == "POST":
