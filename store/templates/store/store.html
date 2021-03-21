@@ -1,0 +1,48 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<style>
+
+.view{
+border:1px solid #195;}
+.view:hover{
+	border:1px solid white;
+	background-color:#191918;
+	color:#FFF;
+}
+
+.add-btn{
+	border:1px solid #122;
+}
+.add-btn:hover{
+	border:1px solid white;
+	background-color:#191918;
+	color:#FFF;
+}
+.thumbnail{
+	margin-bottom:5px!important;
+}
+.thumbnail:hover{
+	transform:scale(1.1);	
+}
+
+
+</style>
+
+	{% for product in products %}
+		<div class=" {% if forloop.counter|divisibleby:3 %} row {% endif %}">
+			<div class="col-lg-4" style="margin-bottom: 10px;">
+				<img class="thumbnail" src="{{product.get_image_url}}">
+				<div class="box-element product">
+					<h6><strong>{{product.name}} {{ product.url }}</strong></h6>
+					<hr>
+					<button  class="btn btn-outline-secondary add-btn update-cart" data-product="{{product.id}}" data-action="add">Add to Cart</button>
+					<a class="btn btn-outline-secondary view"  href="#">View</a>
+					<h4 style="display: inline-block; float: right"><strong>Rs. {{product.price|floatformat:2}}</strong></h4>
+
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+
+{% endblock content %}

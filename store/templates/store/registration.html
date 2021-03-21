@@ -1,0 +1,102 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<style>  
+body{
+  background-image: url('/static/images/theem1.jpg') !important;
+  background-size: 100%;
+  opacity:0.8;
+}  
+    .input-container {
+      display: -ms-flexbox; /* IE10 */
+      display: flex;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    
+    .icon {
+      padding: 13px;
+      background: #3931af;
+      color: white;
+      min-width: 50px;
+      text-align: center;
+      border-radius:2px;
+    }
+    
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      outline: none;
+    }
+    
+    .input-field:focus {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #3931af;
+    }
+    
+    /* Set a style for the submit button */
+    .btn {
+      background-color: #3931af;
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    .btn:hover {
+      opacity: 1;
+      border:2px solid #3931af;
+      background-color:white;
+      color: black;
+    }
+    .error {
+      background-color: white;
+      color: red;
+      padding: 10px 5px;
+      border: 1px solid black;
+      border-radius:2px;
+      width: 100%;
+      font-weight: bold;
+      opacity: 1;
+    }
+    </style>
+
+<div class="container">
+    <div>
+        <div class="row">
+            <div class="col-md-4">
+                <form method="POST" id="signup-form" data-toggle="validate" style="max-width:500px;margin:auto;border:1px;">
+                    <h2 style="color:white;font-weight:bolder;">Sign Up </h2>
+                    <br>
+                    {% csrf_token %}
+                    <div class="input-container">
+                      <i class="fa fa-user icon"></i>
+                      <input class="input-field" type="text" placeholder="Username" name="username" required>
+                    </div>
+                  
+                    <div class="input-container">
+                      <i class="fa fa-envelope icon"></i>
+                      <input class="input-field" type="email" placeholder="Email" name="email" required>
+                    </div>
+                    
+                    <div class="input-container">
+                      <i class="fa fa-key icon"></i>
+                      <input class="input-field" type="password" placeholder="Password" name="password1" required>
+                    </div>
+                    <div class="input-container">
+                        <i class="fa fa-key icon"></i>
+                        <input class="input-field" type="password" placeholder="Password" name="password2" required>
+                      </div>
+                    <p class="text-danger error {% if not error %} hidden {% endif %}">{{error}}</p>
+                    <button type="submit" class="btn">Register</button>
+                  </form>
+            </div>
+            <div class="col-md-8"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

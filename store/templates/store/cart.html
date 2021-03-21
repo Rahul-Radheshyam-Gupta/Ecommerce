@@ -1,0 +1,87 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<style>
+.continue_shopping{
+	border: 2px solid #337ab7;;
+	background-color:white;
+}
+.continue_shopping:hover{
+	border: 2px solid transparent;
+	background-color:#000;
+	color:#FFF;
+}
+.checkout:hover{
+	transform: scale(1.2);
+}
+.row-image{
+	margin-left: 50px;
+	height: 50px;
+	width: 70px;
+	border-radius: 2px;
+}
+.row-image:hover{
+	transform:scale(1.6);
+	border-radius: 2px;
+}
+
+</style>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="box-element">
+
+				<a  class="btn continue_shopping" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
+
+				<br>
+				<br>
+				<table class="table">
+					<tr>
+						{% if order %}
+							<th><h5>Items: <strong class="cart">{{order.get_total_items}}</strong></h5></th>
+							<th><h5>Total: Rs. <strong class="cart_total"> {{order.get_cart_total | floatformat:2}}</strong></h5></th>
+						{% else %}
+							<th><h5>Items: <strong>No Item Added Yet</strong></h5></th>
+							<th><h5>Total:<strong> Rs. 0</strong></h5></th>
+						{% endif %}
+						<th>
+							<a  style="float:right; margin:5px;" class="btn btn-success checkout" href="{% url 'checkout' %}">Checkout</a>
+						</th>
+					</tr>
+				</table>
+
+			</div>
+
+			<br>
+			<div class="box-element">
+				<div class="cart-row">
+					<div style="flex:2"></div>
+					<div style="flex:2"><strong>Item</strong></div>
+					<div style="flex:1"><strong>Price</strong></div>
+					<div style="flex:1"><strong>Quantity</strong></div>
+					<div style="flex:1"><strong>Total</strong></div>
+				</div>
+				{% for item in items %}
+					<div class="cart-row">
+						<div style="flex:2"><img class="row-image" src="{{item.product.get_image_url}}"></div>
+						<div style="flex:2"><p>{{item.product.name}}</p></div>
+						<div style="flex:1"><p id="price_{{item.product.id}}">{{item.product.price | floatformat:2}}</p></div>
+						<div style="flex:1">
+							
+							<div class="row">
+								<div class="col-sm-1"> 
+									<p class="quantity" id="quantity_{{item.product.id}}" style="margin-top: 6px;" >{{item.quantity}}</p>
+								</div>
+								<div class="col-sm-1"> 
+									<img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="add" src="{% static  'images/up-arrow.png' %}">
+									<img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="remove" src="{% static  'images/down-arrow.png' %}">
+								 </div>
+							</div>
+						</div>
+						<div style="flex:1"><p id="total_{{item.product.id}}" class="each-total">{% widthratio item.quantity 1 item.product.price %}.00</p></div>
+					</div>
+				{% endfor %}
+
+			</div>
+		</div>
+	</div>
+{% endblock content %}

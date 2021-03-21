@@ -1,0 +1,148 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+	.back-cart{
+		border:1px solid #ccc;
+	}
+	.back-cart:hover{
+		transform: scale(1.1);
+	}
+	.row-image{
+		margin-left: 40px;
+		height: 60px;
+		width: 60px;
+		border-radius: 2px;
+	}
+	
+</style>
+
+     <div class="row">
+		<div class="col-lg-6">
+			<div class="box-element" id="form-wrapper">
+				<form id="shipping-form" method="POST" enctype="multipart/form-data">
+
+					{% csrf_token %}
+					<div id="user-info">
+						<div class="form-field">
+							<input required class="form-control" value="{{request.user.customer.name}}" type="text" name="name" placeholder="Name..">
+						</div>
+						<div class="form-field">
+							<input required class="form-control" value="{{request.user.customer.email}}" type="email" name="email" placeholder="Email..">
+						</div>
+					</div>
+						{% if order.shipping %}
+							<div id="shipping-info">
+								<hr>
+								<p>Shipping Information:</p>
+								<hr>
+								<div class="form-field">
+									<input class="form-control" type="text" name="address" placeholder="Address..">
+								</div>
+								<div class="form-field">
+									<input class="form-control" type="text" name="city" placeholder="City..">
+								</div>
+								<div class="form-field">
+									<input class="form-control" type="text" name="state" placeholder="State..">
+								</div>
+								<div class="form-field">
+									<input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+								</div>
+							</div>
+						{% endif %}
+					<hr>
+					<input id="shipping-btn" type="button" class="btn btn-success btn-block" type="submit" value="Continue">
+				</form>
+			</div>
+
+			<br>
+			<div class="box-element hidden" id="payment-info">
+				<small>Paypal Options</small><br>
+				<button class="btn btn-success btn-block" id="make-payment">
+					Make Payment
+				</button>
+			</div>
+			
+		</div>
+
+		<div class="col-lg-6">
+			<div class="box-element">
+				<a  class="btn btn-outline-dark back-cart" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+				<hr>
+				<h3>Order Summary</h3>
+				<hr>
+				{% for item in items %}
+					<div class="cart-row">
+						<div style="flex:2"><img class="row-image" src="{{ item.product.get_image_url }}"></div>
+						<div style="flex:2"><p> {{item.product.name}} </p></div>
+						<div style="flex:1"><p>Rs. {{item.product.price}}</p></div>
+						<div style="flex:1"><p>x{{item.quantity}}</p></div>
+					</div>
+				{% endfor %}
+				<hr>
+				<h5 style="margin:0 25px;">Items:  <p style="float:right;"> {{order.get_total_items}}</p></h5>
+				<h5 style="margin:0 25px;">Total:  <p style="float:right;">  Rs. {{order.get_cart_total | floatformat:2}}</p></h5>
+			</div>
+		</div>
+	</div>
+	<script>
+		console.log("=== ship ",'{{shipping}}')
+		var form = document.getElementById("shipping-form")
+		var btn = document.getElementById("shipping-btn") 
+
+		btn.addEventListener("click",function(){
+			submit_shipping(form);
+			document.getElementById('shipping-btn').classList.add('hidden');
+			document.getElementById("payment-info").classList.remove('hidden');
+		})
+
+
+		// btn.click(function(e){
+
+		// 	submit_shipping(form);
+		// 	document.getElementById('shipping-btn').classList.add('hidden');
+		// 	document.getElementById("payment-info").classList.remove('hidden');
+		// })
+		function submit_shipping(form){
+			console.log("=== submit form")
+			var user_data = {
+				'name':form.name.value,
+				'email':form.email.value,
+				'total':'{{order.get_cart_total | floatformat:2}}'
+			}
+			console.log("form",form.address)
+			try{
+				var shipping_data = {
+				'address':form.address.value,
+				'state':form.state.value,
+				'zipcode':form.zipcode.value,
+				'city':form.city.value,
+			}
+			}
+			catch(e){
+				var shipping_data = {}
+			}
+
+
+
+		$.ajax({
+			url:"/checkout/",
+			type:'POST',
+			data:{
+				'user_data':JSON.stringify(user_data),
+				'shipping_data':JSON.stringify(shipping_data),
+				'csrfmiddlewaretoken':csrfmiddlewaretoken
+				},
+			dataType: 'json',
+			success:function(data){
+				console.log("data ",data)
+				cart = {}
+				document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+				window.location.href = "{% url 'store' %}"
+			}
+			})
+		}
+
+	</script>
+{% endblock content %}
