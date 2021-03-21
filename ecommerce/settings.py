@@ -15,7 +15,7 @@ SECRET_KEY = 'j8e@q8^5mfhy+_&7qtuihi7ec1b8wy_tnum4e%yq+3*8m*210z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -113,9 +113,9 @@ USE_TZ = True
 MESSAGE_LEVEL = message_constants.DEBUG
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'static')
-]
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR,'static')
+# ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
