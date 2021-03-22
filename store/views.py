@@ -93,9 +93,10 @@ def store(request):
 	else:
 		order = {}
 		cookies = json.loads(request.COOKIES.get('cart'))
-		get_total_items = 0       
-		for product_id in cookies:
-			get_total_items += cookies[product_id]["quantity"]
+		get_total_items = 0   
+		if cookies:    
+			for product_id in cookies:
+				get_total_items += cookies[product_id]["quantity"]
 		order["get_total_items"] = get_total_items
 	context['order'] = order
 	return render(request,template_name, context)
@@ -142,10 +143,10 @@ def checkout(request):
 					customer.save()
 					order = Order.objects.create(customer=customer,complete=False)
 					data = get_cart_cookies(request)
-					items = data[0]
-					for item in items:
-						order_item = OrderItem.objects.create(product=item["product"],order=order,quantity=item["quantity"])
-					
+					if data:
+						items = data[0]
+						for item in items:
+							order_item = OrderItem.objects.create(product=item["product"],order=order,quantity=item["quantity"])
 				else:
 					return JsonResponse({'message':"Please fill all details correctly."})
 

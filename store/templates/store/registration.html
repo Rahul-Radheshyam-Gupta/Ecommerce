@@ -5,6 +5,7 @@
 <style>  
 body{
   background-image: url('/static/images/theem1.jpg') !important;
+  background-repeat: no-repeat;
   background-size: 100%;
   opacity:0.8;
 }  
@@ -65,7 +66,7 @@ body{
     </style>
 
 <div class="container">
-    <div>
+    <div style="margin-top:3%;">
         <div class="row">
             <div class="col-md-4">
                 <form method="POST" id="signup-form" action="{% url 'registration' %}" data-toggle="validate" style="max-width:500px;margin:auto;border:1px;">
