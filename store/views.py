@@ -142,10 +142,10 @@ def checkout(request):
 					customer.save()
 					order = Order.objects.create(customer=customer,complete=False)
 					data = get_cart_cookies(request)
-					items = data[0]
-					for item in items:
-						order_item = OrderItem.objects.create(product=item["product"],order=order,quantity=item["quantity"])
-					
+					if data:
+						items = data[0]
+						for item in items:
+							order_item = OrderItem.objects.create(product=item["product"],order=order,quantity=item["quantity"])
 				else:
 					return JsonResponse({'message':"Please fill all details correctly."})
 
