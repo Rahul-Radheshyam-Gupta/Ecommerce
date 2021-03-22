@@ -93,9 +93,10 @@ def store(request):
 	else:
 		order = {}
 		cookies = json.loads(request.COOKIES.get('cart'))
-		get_total_items = 0       
-		for product_id in cookies:
-			get_total_items += cookies[product_id]["quantity"]
+		get_total_items = 0   
+		if cookies:    
+			for product_id in cookies:
+				get_total_items += cookies[product_id]["quantity"]
 		order["get_total_items"] = get_total_items
 	context['order'] = order
 	return render(request,template_name, context)
