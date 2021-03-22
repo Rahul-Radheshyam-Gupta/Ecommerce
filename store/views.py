@@ -92,9 +92,10 @@ def store(request):
 		order,created = Order.objects.get_or_create(customer=customer,complete=False)
 	else:
 		order = {}
-		cookies = json.loads(request.COOKIES.get('cart'))
+		cookies = request.COOKIES.get('cart')
 		get_total_items = 0   
 		if cookies:    
+			cookies = json.loads(cookies)
 			for product_id in cookies:
 				get_total_items += cookies[product_id]["quantity"]
 		order["get_total_items"] = get_total_items

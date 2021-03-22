@@ -2,7 +2,11 @@ import json
 from store.models import Product
 
 def get_cart_cookies(request):
-    cookies = json.loads(request.COOKIES.get('cart'))
+    cookies = request.COOKIES.get('cart')
+    if cookies:
+        cookies = json.loads(request.COOKIES.get('cart'))
+    else:
+        cookies = []
     order = {}
     items = []
     # if cookies:
