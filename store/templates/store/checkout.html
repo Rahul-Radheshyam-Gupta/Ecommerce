@@ -1,5 +1,6 @@
 {% extends 'store/main.html' %}
 {% load static %}
+{% load template_filter %}
 {% block content %}
 
 <style>
@@ -12,7 +13,7 @@
 	.row-image{
 		margin-left: 40px;
 		height: 60px;
-		width: 60px;
+		width: 70px;
 		border-radius: 2px;
 	}
 	
@@ -20,7 +21,7 @@
 
      <div class="row">
 		<div class="col-lg-6">
-			<div class="box-element" id="form-wrapper">
+			<div class="box-element" id="form-wrapper" style="background-color:whitesmoke;">
 				<form id="shipping-form" method="POST" enctype="multipart/form-data">
 
 					{% csrf_token %}
@@ -61,7 +62,7 @@
 			</div>
 
 			<br>
-			<div class="box-element hidden" id="payment-info">
+			<div class="box-element hidden" id="payment-info" style="background-color:whitesmoke;">
 				<small>Paypal Options</small><br>
 				<button class="btn btn-success btn-block" id="make-payment">
 					Make Payment (Work In Progress)
@@ -71,27 +72,48 @@
 		</div>
 
 		<div class="col-lg-6">
-			<div class="box-element">
+			<div class="box-element" style="background-color:whitesmoke;">
 				<a  class="btn btn-outline-dark back-cart" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
 				<hr>
 				<h3>Order Summary</h3>
 				<hr>
-				{% if items %}
-					{% for item in items %}
-						<div class="cart-row">
-							<div style="flex:2"><img class="row-image" src="{{ item.product.get_image_url }}"></div>
-							<div style="flex:2"><p> {{item.product.name}} </p></div>
-							<div style="flex:1"><p>Rs. {{item.product.price}}</p></div>
-							<div style="flex:1"><p>x{{item.quantity}}</p></div>
-						</div>
-					{% endfor %}
-					<hr>
-				{% else %}
-					<div class="cart-row"><p style="text-align: center;margin:auto;font-weight:bolder;">No Item in your Cart</p></div>
-				{% endif %}
 
-				<h5 style="margin:0 25px;">Items:  <p style="float:right;"> {{order.get_total_items}}</p></h5>
-				<h5 style="margin:0 25px;">Total:  <p style="float:right;">  Rs. {{order.get_cart_total | floatformat:2}}</p></h5>
+
+					<table class="table">
+						<thead>
+							<th class="text-center"></th>
+							<th class="text-center">Product Name</th>
+							<th class="text-center">Price </th>
+							<th class="text-center">  Quantity</th>
+						</thead>
+						<tbody>
+							{% if items %}
+								{% for item in items %}
+									<tr>
+										<td><img class="row-image back-cart" src="{{ item.product.get_image_url }}"></td>
+										<td class="text-center">{{item.product.name}}</td>
+										<td class="text-center">Rs. {{item.product.price | floatformat:2}}</td>
+										<td class="text-center">x {{item.quantity | floatformat:2}}</td>
+									</tr>
+								{% endfor %}
+							{% else %}
+									<tr> No Item in your Cart  </tr>
+							{% endif %}
+									
+								<tr>
+									<th class="text-center">Items:</th>
+									<td class="text-center"></td>
+									<td class="text-center"></td>
+									<th class="text-center">{{order.get_total_items}}</th>
+								</tr>
+								<tr>
+									<th class="text-center ">Total:</th>
+									<td class="text-center"></td>
+									<td class="text-center"></td>
+									<th class="text-center">Rs. {{order.get_cart_total | floatformat:2}}</th>
+								</tr>
+						</tbody>
+					</table>
 			</div>
 		</div>
 	</div>

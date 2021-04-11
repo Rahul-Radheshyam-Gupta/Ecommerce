@@ -1,4 +1,5 @@
 {% extends 'store/main.html' %}
+{% load template_filter %}
 {% load static %}
 {% block content %}
 <style>
@@ -28,7 +29,7 @@
 </style>
 	<div class="row">
 		<div class="col-lg-12">
-			<div class="box-element">
+			<div class="box-element" style="background-color:whitesmoke!important;">
 
 				<a  class="btn continue_shopping" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
 
@@ -52,38 +53,44 @@
 			</div>
 
 			<br>
-			<div class="box-element">
-				<div class="cart-row">
-					<div style="flex:2"></div>
-					<div style="flex:2"><strong>Item</strong></div>
-					<div style="flex:1"><strong>Price</strong></div>
-					<div style="flex:1"><strong>Quantity</strong></div>
-					<div style="flex:1"><strong>Total</strong></div>
-				</div>
-				{% if items %}
-					{% for item in items %}
-						<div class="cart-row">
-							<div style="flex:2"><img class="row-image" src="{{item.product.get_image_url}}"></div>
-							<div style="flex:2"><p>{{item.product.name}}</p></div>
-							<div style="flex:1"><p id="price_{{item.product.id}}">{{item.product.price | floatformat:2}}</p></div>
-							<div style="flex:1">
-								
-								<div class="row">
-									<div class="col-sm-1"> 
-										<p class="quantity" id="quantity_{{item.product.id}}" style="margin-top: 6px;" >{{item.quantity}}</p>
-									</div>
-									<div class="col-sm-1"> 
-										<img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="add" src="{% static  'images/up-arrow.png' %}">
-										<img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="remove" src="{% static  'images/down-arrow.png' %}">
-									</div>
-								</div>
-							</div>
-							<div style="flex:1"><p id="total_{{item.product.id}}" class="each-total">{% widthratio item.quantity 1 item.product.price %}.00</p></div>
-						</div>
-					{% endfor %}
-				{% else %}
-					<div class="cart-row"><p style="text-align: center;margin:auto;font-weight:bolder;">No Item in your Cart</p></div>
-				{% endif %}
+			<div class="box-element" style="background-color:whitesmoke!important;">
+					<table class="table striped">
+						<thead>
+							<th></th>
+							<th>Product Name</th>
+							<th>Unit Price</th>
+							<th>Quantity</th>
+							<th>Price</th>
+						</thead>
+						<tbody>
+						{% if items %}
+							{% for item in items %}
+								<tr>
+									<td><img class="row-image" src="{{item.product.get_image_url}}"></td>
+									<td>{{item.product.name}}</td></td>
+									<td> <p id="price_{{item.product.id}}">{{item.product.price | floatformat:2}}</p> </td>
+									<td>
+										<div class="row">
+											<div class="col-sm-1"> 
+												<p class="quantity" id="quantity_{{item.product.id}}" style="margin-top: 6px;" >{{item.quantity}}</p>
+											</div>
+											<div class="col-sm-1"> 
+												<img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="add" src="{% static  'images/up-arrow.png' %}">
+												<img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="remove" src="{% static  'images/down-arrow.png' %}">
+											</div>
+										</div>
+									</td>
+									<td><p id="total_{{item.product.id}}" class="each-total">
+										{{ item.quantity|mulplication:item.product.price | floatformat:2 }}
+									</p></td>
+								</tr>
+							{% endfor %}
+					{% else %}
+						<tr><p style="text-align: center;margin:auto;font-weight:bolder;">No Item in your Cart</p></tr>
+					{% endif %}
+						</tbody>
+					</table>
+					
 
 			</div>
 		</div>

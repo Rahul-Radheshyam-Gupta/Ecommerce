@@ -48,7 +48,10 @@
     <!-- added as boot.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-2.2.4/dt-1.10.13/fc-3.2.2/fh-3.1.2/r-2.1.0/sc-1.4.2/datatables.min.css" />
 
 <body>
   <style>
@@ -56,15 +59,13 @@
   transform:scale(1.1);
 }
 body{
-  background-image: url('/static/images/default.jpg');
-  background-size: 100%;
+  background-image:linear-gradient(to right,rgb(0, 2, 14),#0e0d0d,rgb(0, 2, 14))!important;
+
   opacity:1;
 }  
 span.cart-t {
     color: #fff;
     font-size: 12px;
-    position: fixed;
-    top: 12px;
     margin-left: 2px;
 }
 ul li a img:hover{
@@ -95,7 +96,7 @@ span.cart-t:hover{
             <a class="navbar-brand" href="{% url 'store' %}">Store</a>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li style="margin:0 20px;"><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;"> Cart <span id="" class="cart-t cart">{{order.get_total_items}}</span></a></li>
+            <li style="margin:0 20px;"><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
             {% if request.session.authenticated %}
               <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
             {% else %}

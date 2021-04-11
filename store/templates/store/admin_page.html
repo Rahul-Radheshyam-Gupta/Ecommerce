@@ -1,0 +1,254 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<style>  
+/* body{
+  background-image: url('/static/images/theem1.jpg') !important;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  opacity:0.8;
+}   */
+    .input-container {
+      display: -ms-flexbox; /* IE10 */
+      display: flex;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    
+    .icon {
+      padding: 13px;
+      background: #3931af;
+      color: white;
+      min-width: 50px;
+      text-align: center;
+      border-radius:2px;
+    }
+    
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      outline: none;
+    }
+    
+    .input-field:focus {
+      padding: 10px;
+      border: 1px solid #3931af;
+    }
+    
+    /* Set a style for the submit button */
+    .btn {
+      background-color: #3931af;
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    .btn:hover {
+      opacity: 1;
+      border:2px solid #3931af;
+      background-color:white;
+      color: black;
+    }
+    .error {
+      background-color: white;
+      color: red;
+      padding: 10px 5px;
+      border: 1px solid black;
+      border-radius:2px;
+      width: 100%;
+      font-weight: bold;
+      opacity: 1;
+    }
+	.mb1 {
+		margin-left: 20px;
+		margin-right: 10px;
+		margin-bottom: 10px;
+		height:35px;
+		width: 90%;
+	}
+	.btn{
+		width: 80%;
+		height:40px;
+		padding: 12px;
+		margin-left: 35px;
+		margin-top: 5px;
+
+	}
+	.row-image{
+		width: 40px;
+		height:45px;
+	}
+	#myTable tr.header, #myTable tr:hover {
+	/* Add a grey background color to the table header and on hover */
+	background-color: #f1f1f1;
+	}
+	#myInput{
+		float:right;
+	}
+  .pointer{
+    cursor: pointer;
+  }
+  .sort{
+    height: 4px;
+    width: 8px;
+    cursor: pointer;
+    display: block;
+    margin-top: 5px;
+    transition: .1s;
+  }
+
+    </style>
+
+<div class="container">
+    <div style="margin-top:5px;">
+      <div class="row">
+        <div class="col-md-4" style="margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
+          <strong>
+          <p style="padding-top: 25px;">Add a Product </p>
+          </strong>
+          <hr>
+                  <form method="POST" id="signup-form" action="{% url 'admin-dashboard' %}" data-toggle="validate" enctype='multipart/form-data' style="max-width:500px;border:1px;">
+                      {% csrf_token %}
+                        <input class="input-field mb1" type="text" placeholder="Write Product Name" name="name" required>
+                        <input class="input-field mb1" type="text" placeholder="Short Product Description" name="description" required>
+                        <input class="input-field mb1" type="number" placeholder="Enter Price" name="price" required>
+                        <input class="input-field mb1" type="file" placeholder="upload a product Image" title="Upload Product Image" name="image" required>
+            <input type="checkbox" name="digital"> Is this digital product?
+            <p class="text-danger error {% if not error %} hidden {% endif %}">{{error}}</p>
+            <hr>
+                      <button type="submit" class="btn">Register</button>
+            </form>
+            <br>
+        </div>
+        <div class="col-md-7" style="margin-bottom: 0%;margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
+          <strong><p style="padding-top: 20px;">Product List </p></strong>
+          <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for a product.."><br>
+          <table id="myTable" class="table row-border order-column" width="100%">
+              <thead>
+                <th class="text-center pointer" onclick="sortTable(0)">Sr. No.
+                  <div style="float: right; height: 10px;margin-left: -12px;margin-right: 12px;"> 
+                    <img class="sort" src="{% static  'images/up-arrow.png' %}">
+                    <img class="sort"  src="{% static  'images/down-arrow.png' %}">
+                  </div>
+                </th>
+                <th>Porduct Image</th>
+                <th class="text-center pointer" onclick="sortTable(2)">Product Name
+                  <div style="float: right; height: 10px;margin-left: -12px;margin-right: 12px;"> 
+                    <img class="sort" src="{% static  'images/up-arrow.png' %}">
+                    <img class="sort"  src="{% static  'images/down-arrow.png' %}">
+                  </div>
+                </th>
+                <th class="text-center">Unit Price</th>
+                <th class="text-center pointer" onclick="sortTable(4)">Description
+                  <div style="float: right; height: 10px;margin-left: -12px;margin-right: 12px;"> 
+                    <img class="sort"  src="{% static  'images/up-arrow.png' %}">
+                    <img class="sort"  src="{% static  'images/down-arrow.png' %}">
+                  </div>
+                </th>
+              </thead>
+              <tbody>
+                {% for product in products %}
+                  <tr>
+                    <td class="text-center">{{forloop.counter}}</td>
+                    <td><img class="row-image" src="{{product.get_image_url}}"></td>
+                    <td>{{product.name}}</td></td>
+                    <td> {{product.price | floatformat:2}} </td>
+                    <td>
+                      {% if product.description %}
+                        {{ product.description}}
+                      {% else %}
+
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+</div>
+<script type="text/javascript">
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  // Set the sorting direction to ascending:
+  dir = "asc";
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /* Check if the two rows should switch place,
+      based on the direction, asc or desc: */
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      // Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /* If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again. */
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+
+{% endblock content %}

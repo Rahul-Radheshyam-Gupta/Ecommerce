@@ -29,11 +29,13 @@ def create_customer(sender, instance, created, **kwargs):
     instance.customer.save()
 
 class Product(models.Model):
-	added_by = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True,related_name="products") #new
+	added_by = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="products") #new
 	name = models.CharField(max_length=200)
 	price = models.FloatField()
 	digital = models.BooleanField(default=False)
 	image = models.ImageField(null=True,blank=True)
+	description = models.TextField(max_length=1000,null=True,blank=True)
+	is_active = models.BooleanField(default=True)
     
 
 	def __str__(self):

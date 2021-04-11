@@ -10,6 +10,66 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 import re
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
+from django.views.generic import TemplateView
+from store.forms import ProductForm
+from functools import wraps
+
+def authenticate_vendor(view_func):
+ @wraps(view_func)
+ def wrapper(self,request,*args,**kwargs):
+  error = {}
+  try:
+   if user.customer.is_vendor:
+    print("Yes Vendor authenticated")
+    return view_func(self,request,*args,**kwargs)
+   else:
+    error['error'] = 'You Are not Vendor.Activate Venor Option from Your setting.'
+   return render(request,'store/store.html',error)          
+  except :
+   error['error'] = 'You Are not login.Please Login'
+   return render(request,'store/login.html',error)
+ return wrapper
+
+
+
+class AdminDashboard(TemplateView):
+	template_name = 'store/admin_page.html'
+	@authenticate_vendor
+	def get(self,request):
+		customer = request.user.customer
+		products = Product.objects.filter(added_by=customer,is_active=True)
+		return render(request, self.template_name, context={'products':products})
+	def post(self,request):
+		print(request.POST,request.FILES)
+		added_by = request.user.customer
+		name = request.POST.get("name")
+		price = request.POST.get("price")
+		digital = request.POST.get("digital",False)
+		image = request.FILES.get("image")
+		description = request.POST.get("description")
+
+		try:
+			# form = ProductForm(request.POST, request.FILES)
+			# if form.is_valid():
+			# 	form.save(commit=False)
+			# 	form.added_by = added_by
+			# 	print("validated form",form.validated_data)
+			# 	form.save()
+			# problem - unable to store foreign key in model form
+			# so i am going to store directly and i passed enctype='multipart/form-data' in html form
+			Product.objects.create(
+				added_by=added_by,
+				name = name,
+				price = price,
+				digital = digital,
+				image = image,
+				description = description,
+			)
+		except Exception as e:
+			print("err",str(e))
+		return HttpResponseRedirect(reverse('admin-dashboard'))
+    
+
 def log_out(request):
 	logout(request)
 	request.session['authenticated'] = False
