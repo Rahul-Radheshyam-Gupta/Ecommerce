@@ -19,13 +19,14 @@ def authenticate_vendor(view_func):
  def wrapper(self,request,*args,**kwargs):
   error = {}
   try:
-   if user.customer.is_vendor:
+   if request.user.customer.is_vendor:
     print("Yes Vendor authenticated")
     return view_func(self,request,*args,**kwargs)
    else:
     error['error'] = 'You Are not Vendor.Activate Venor Option from Your setting.'
    return render(request,'store/store.html',error)          
-  except :
+  except Exception as e:
+   print(str(e))
    error['error'] = 'You Are not login.Please Login'
    return render(request,'store/login.html',error)
  return wrapper

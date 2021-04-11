@@ -99,6 +99,7 @@ span.cart-t:hover{
             <li style="margin:0 20px;"><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
             {% if request.session.authenticated %}
               <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+              <li><a href="{% url 'admin-dashboard' %}"><span class="glyphicon glyphicon-log-in"></span> Admin Page</a></li>
             {% else %}
               <li><a href="{% url 'registration' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
               <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
