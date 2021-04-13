@@ -79,7 +79,7 @@
 				<hr>
 
 
-					<table class="table">
+					<table class="table" id="checkout-table">
 						<thead>
 							<th class="text-center"></th>
 							<th class="text-center">Product Name</th>
@@ -118,6 +118,10 @@
 		</div>
 	</div>
 	<script>
+		$('#checkout-table').DataTable({
+          // ajax:'{% url "admin-dashboard" %}?attendance=true',
+            });
+
 		console.log("=== ship ",'{{shipping}}')
 		var form = document.getElementById("shipping-form")
 		var btn = document.getElementById("shipping-btn") 

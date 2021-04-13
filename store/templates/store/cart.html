@@ -2,6 +2,9 @@
 {% load template_filter %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 <style>
 .continue_shopping{
 	border: 2px solid #337ab7;;
@@ -31,7 +34,7 @@
 		<div class="col-lg-12">
 			<div class="box-element" style="background-color:whitesmoke!important;">
 
-				<a  class="btn continue_shopping" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
+				<a  class="btn continue_shopping" href="{% url 'store' %}" style="color:black;width:200px;">&#x2190; Continue Shopping</a>
 
 				<br>
 				<br>
@@ -54,7 +57,7 @@
 
 			<br>
 			<div class="box-element" style="background-color:whitesmoke!important;">
-					<table class="table striped">
+					<table class="table row-border order-column" style="min-width:400px;" width="100%"  id="cart-table">
 						<thead>
 							<th></th>
 							<th>Product Name</th>
@@ -95,4 +98,16 @@
 			</div>
 		</div>
 	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	
+	<script>
+
+		$('#cart-table').DataTable({
+          // ajax:'{% url "admin-dashboard" %}?attendance=true',
+          "scrollX": true
+            });
+	</script>
 {% endblock content %}

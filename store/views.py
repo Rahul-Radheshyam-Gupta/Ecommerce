@@ -13,6 +13,8 @@ from django.contrib import messages
 from django.views.generic import TemplateView
 from store.forms import ProductForm
 from functools import wraps
+from django.core import serializers
+from http import HTTPStatus
 
 def authenticate_vendor(view_func):
  @wraps(view_func)
@@ -34,40 +36,79 @@ def authenticate_vendor(view_func):
 
 
 class AdminDashboard(TemplateView):
-	template_name = 'store/admin_page.html'
+	template_name = 'store/admin_dashboard.html'
 	@authenticate_vendor
 	def get(self,request):
 		customer = request.user.customer
 		products = Product.objects.filter(added_by=customer,is_active=True)
-		return render(request, self.template_name, context={'products':products})
+		return render(request, self.template_name,{'products':products})
 	def post(self,request):
-		print(request.POST,request.FILES)
 		added_by = request.user.customer
+		id = request.POST.get("id")
+		print("====",request.POST,request.FILES,self.request.is_ajax())
 		name = request.POST.get("name")
 		price = request.POST.get("price")
 		digital = request.POST.get("digital",False)
 		image = request.FILES.get("image")
 		description = request.POST.get("description")
+		if digital == "on":
+			digital = True
+		else:
+			digital = False
+		if self.request.is_ajax():
+			if request.POST.get("action")=='add':
+				print("add ajax",request.POST)
+				if id:
+					# if id then update the product
+					product = Product.objects.get(id=id)
+					product.name = name
+					product.price = price
+					product.digital = digital
+					product.description = description
+					product.save()
+				else:
+					# create new product
+					Product.objects.create(
+							added_by=added_by,
+							name = name,
+							price = price,
+							digital = digital,
+							image = image,
+							description = description,
+						)
+			elif request.POST.get("action")=='delete':
+				product = Product.objects.get(id=id)
+				product.delete()
+			return HttpResponse("{'message':'Successful'}",content_type="application/json",status=HTTPStatus.OK)
+		else:
 
-		try:
-			# form = ProductForm(request.POST, request.FILES)
-			# if form.is_valid():
-			# 	form.save(commit=False)
-			# 	form.added_by = added_by
-			# 	print("validated form",form.validated_data)
-			# 	form.save()
-			# problem - unable to store foreign key in model form
-			# so i am going to store directly and i passed enctype='multipart/form-data' in html form
-			Product.objects.create(
-				added_by=added_by,
-				name = name,
-				price = price,
-				digital = digital,
-				image = image,
-				description = description,
-			)
-		except Exception as e:
-			print("err",str(e))
+			try:
+				if id:
+					product = Product.objects.get(id=id)
+					product.name = name
+					product.price = price
+					product.digital = digital
+					product.description = description
+					product.save()
+				else:
+					# form = ProductForm(request.POST, request.FILES)
+					# if form.is_valid():
+					# 	form.save(commit=False)
+					# 	form.added_by = added_by
+					# 	print("validated form",form.validated_data)
+					# 	form.save()
+					# problem - unable to store foreign key in model form
+					# so i am going to store directly and i passed enctype='multipart/form-data' in html form
+					Product.objects.create(
+						added_by=added_by,
+						name = name,
+						price = price,
+						digital = digital,
+						image = image,
+						description = description,
+					)
+			except Exception as e:
+				print("err",str(e))
 		return HttpResponseRedirect(reverse('admin-dashboard'))
     
 
