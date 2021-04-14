@@ -62,7 +62,7 @@ body{
   background-image:linear-gradient(to right,rgb(0, 2, 14),#0e0d0d,rgb(0, 2, 14))!important;
 
   opacity:1;
-}  
+}
 span.cart-t {
     color: #fff;
     font-size: 12px;
@@ -85,18 +85,124 @@ span.cart-t:hover{
 }
 
 
+*{
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+}
+body{
+  font-family: montserrat;
+}
+nav{
+  background: #0082e6;
+  height: 60px;
+  width: 100%;
+}
+label.logo{
+  color: white;
+  font-size: 35px;
+  line-height: 80px;
+  padding: 0 100px;
+  font-weight: bold;
+}
+nav ul{
+  float: right;
+  margin-right: 30px!important;
+}
+nav ul li{
+  display: inline-block;
+  line-height: 80px;
+  margin: 0 5px;
+}
+nav ul li a{
+  color: white;
+  font-size: 17px;
+  padding: 7px 13px;
+  border-radius: 3px;
+}
+a.active,a:hover{
+  background: #1b9bff;
+  transition: .5s;
+}
+.checkbtn{
+  font-size: 30px;
+  color: white;
+  float: right;
+  line-height: 80px;
+  margin-right: 40px;
+  cursor: pointer;
+  display: none;
+}
+#check{
+  display: none;
+}
+@media (max-width: 952px){
+  label.logo{
+    font-size: 30px;
+    padding-left: 50px;
+  }
+  nav ul li a{
+    font-size: 16px;
+  }
+}
+@media (max-width: 858px){
+  .checkbtn{
+    display: block;
+  }
+  ul{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: #2c3e50;
+    top: 50px;
+    left: -100%;
+    text-align: center;
+    transition: all .5s;
+  }
+  nav ul li{
+    display: block;
+    margin: 50px 0;
+    line-height: 30px;
+  }
+  nav ul li a{
+    font-size: 20px;
+    color: white!important;
+    opacity: 1;
+  }
+  a:hover,a.active{
+    background: none;
+    transform:scale(1.2);
+    color: #0082e6;
+  }
+  #check:checked ~ ul{
+    left: 0;
+  }
+}
+section{
+  background: #2c3e50;
+  background-size: cover;
+  height: calc(100vh - 80px);
+}
+
+
+.navbar-brand a:hover{
+  transform:scale(1.2);
+}
+
   </style>
 
     <nav class="navbar navbar-inverse" id="navbar" style="overflow: hidden;">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="{% url 'store' %}">Ecom</a>
-          </div>
-          <ul class="nav navbar-nav">
-            <a class="navbar-brand" href="{% url 'store' %}">Store</a>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li style="margin:0 20px;"><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
+          <input type="checkbox" id="check">
+          <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+          </label>
+            <label class="logo"><a class="navbar-brand" href="{% url 'store' %}">Ecom</a></label>
+
+          <ul class="">
+            <li><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
+            <!-- <li><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li> -->
             {% if request.session.authenticated %}
               <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
               <li><a href="{% url 'admin-dashboard' %}"><span class="glyphicon glyphicon-log-in"></span> Admin Page</a></li>
@@ -105,24 +211,29 @@ span.cart-t:hover{
               <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
             {% endif %}
           </ul>
-        </div>
       </nav>
 
-    
-         <div class="container" style="padding:16px;">
+      <section></section>
+         <div class="container" style="padding:16px;overflow:hidden;">
            <input type="hidden" id="items" value="{{items}}">
 
                 {% block content %}
-    
-    
+
+
                 {% endblock content %}
           </div>
-    
-    
+
+
           <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    
+
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
           <script src="{% static 'js/cart.js' %}"></script>
           <script src="{% static 'js/checkout.js' %}"></script>
+          <script>
+            $("section").hide();
+            $(".checkbtn").click(function(){
+              $("section").toggle();
+            })
+          </script>
       </body>
 </html>

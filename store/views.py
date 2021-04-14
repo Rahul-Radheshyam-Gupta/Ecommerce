@@ -13,6 +13,8 @@ from django.contrib import messages
 from django.views.generic import TemplateView
 from store.forms import ProductForm
 from functools import wraps
+from django.core import serializers
+from http import HTTPStatus
 
 def authenticate_vendor(view_func):
  @wraps(view_func)
@@ -24,7 +26,7 @@ def authenticate_vendor(view_func):
     return view_func(self,request,*args,**kwargs)
    else:
     error['error'] = 'You Are not Vendor.Activate Venor Option from Your setting.'
-   return render(request,'store/store.html',error)          
+   return render(request,'store/store.html',error)
   except Exception as e:
    print(str(e))
    error['error'] = 'You Are not login.Please Login'
@@ -34,42 +36,81 @@ def authenticate_vendor(view_func):
 
 
 class AdminDashboard(TemplateView):
-	template_name = 'store/admin_page.html'
+	template_name = 'store/admin_dashboard.html'
 	@authenticate_vendor
 	def get(self,request):
 		customer = request.user.customer
 		products = Product.objects.filter(added_by=customer,is_active=True)
-		return render(request, self.template_name, context={'products':products})
+		return render(request, self.template_name,{'products':products})
 	def post(self,request):
-		print(request.POST,request.FILES)
 		added_by = request.user.customer
+		id = request.POST.get("id")
+		print("====",request.POST,request.FILES,self.request.is_ajax())
 		name = request.POST.get("name")
 		price = request.POST.get("price")
 		digital = request.POST.get("digital",False)
 		image = request.FILES.get("image")
 		description = request.POST.get("description")
+		if digital == "on":
+			digital = True
+		else:
+			digital = False
+		if self.request.is_ajax():
+			if request.POST.get("action")=='add':
+				print("add ajax",request.POST)
+				if id:
+					# if id then update the product
+					product = Product.objects.get(id=id)
+					product.name = name
+					product.price = price
+					product.digital = digital
+					product.description = description
+					product.save()
+				else:
+					# create new product
+					Product.objects.create(
+							added_by=added_by,
+							name = name,
+							price = price,
+							digital = digital,
+							image = image,
+							description = description,
+						)
+			elif request.POST.get("action")=='delete':
+				product = Product.objects.get(id=id)
+				product.delete()
+			return HttpResponse("{'message':'Successful'}",content_type="application/json",status=HTTPStatus.OK)
+		else:
 
-		try:
-			# form = ProductForm(request.POST, request.FILES)
-			# if form.is_valid():
-			# 	form.save(commit=False)
-			# 	form.added_by = added_by
-			# 	print("validated form",form.validated_data)
-			# 	form.save()
-			# problem - unable to store foreign key in model form
-			# so i am going to store directly and i passed enctype='multipart/form-data' in html form
-			Product.objects.create(
-				added_by=added_by,
-				name = name,
-				price = price,
-				digital = digital,
-				image = image,
-				description = description,
-			)
-		except Exception as e:
-			print("err",str(e))
+			try:
+				if id:
+					product = Product.objects.get(id=id)
+					product.name = name
+					product.price = price
+					product.digital = digital
+					product.description = description
+					product.save()
+				else:
+					# form = ProductForm(request.POST, request.FILES)
+					# if form.is_valid():
+					# 	form.save(commit=False)
+					# 	form.added_by = added_by
+					# 	print("validated form",form.validated_data)
+					# 	form.save()
+					# problem - unable to store foreign key in model form
+					# so i am going to store directly and i passed enctype='multipart/form-data' in html form
+					Product.objects.create(
+						added_by=added_by,
+						name = name,
+						price = price,
+						digital = digital,
+						image = image,
+						description = description,
+					)
+			except Exception as e:
+				print("err",str(e))
 		return HttpResponseRedirect(reverse('admin-dashboard'))
-    
+
 
 def log_out(request):
 	logout(request)
@@ -98,7 +139,7 @@ def registeration(request):
 		# end of validation
 		# check if any error then redirect to sign up page with error
 		# else create user and do authentication and redirect to dashboard
-		if error:    
+		if error:
 			messages.warning(request, error['error'])
 			request.session['authenticated'] = False
 			return render(request,'store/registration.html',error)
@@ -109,7 +150,7 @@ def registeration(request):
 			#do authentication
 			user = authenticate(request,username=username,password=psw1)
 			print('user ',user)
-			# after signup direct run login 
+			# after signup direct run login
 			login(request,user)
 			request.session['authenticated'] = True
 			messages.success(request, 'Successfully account created')
@@ -129,7 +170,7 @@ def store_login(request):
 		get_user_obj = User.objects.filter(email=email)
 		if not get_user_obj:
 			error['error'] = f'No account with {email}'
-		
+
 		if error:
 			request.session['authenticated'] = False
 			messages.warning(request, error['error'])
@@ -154,8 +195,8 @@ def store(request):
 	else:
 		order = {}
 		cookies = request.COOKIES.get('cart')
-		get_total_items = 0   
-		if cookies:    
+		get_total_items = 0
+		if cookies:
 			cookies = json.loads(cookies)
 			for product_id in cookies:
 				get_total_items += cookies[product_id]["quantity"]
@@ -195,7 +236,7 @@ def checkout(request):
 			shipping_data = json.loads(request.POST['shipping_data'])
 			if request.user.is_authenticated:
 				customer = request.user.customer
-				order,created = Order.objects.get_or_create(customer=customer,complete=0)                
+				order,created = Order.objects.get_or_create(customer=customer,complete=0)
 			else:
 				name = user_data.get("name")
 				email = user_data.get("email")
@@ -213,7 +254,7 @@ def checkout(request):
 					return JsonResponse({'message':"Please fill all details correctly."})
 
 				print("unauthenticated")
-			
+
 			submitted_total = float(user_data["total"])
 			print("submitted total ",submitted_total,order.get_cart_total)
 			order.transaction_id = transaction_id
@@ -258,7 +299,7 @@ def checkout(request):
 def updateItem(request):
 	print("process data ",request.POST)
 	if request.method == 'POST':
-		
+
 		if request.is_ajax():
 			product_id = request.POST.get('product',None)
 			action = request.POST.get('action',None)
@@ -274,14 +315,14 @@ def updateItem(request):
 			# item (order item) which represent product and in its quantity in the user's order
 			product = Product.objects.get(id=product_id)
 
-			order_item,created = OrderItem.objects.get_or_create(product = product,order=order) 
+			order_item,created = OrderItem.objects.get_or_create(product = product,order=order)
 			if action == "add":
 				order_item.quantity += 1
 			elif action == "remove":
 				order_item.quantity -= 1
 			order_item.save()
 			print(vars(order_item))
-			
+
 			# quantity of order item is 0 then delete the item from order
 			# note we order item not product directly coz we dont want to delete a product
 			if order_item.quantity <=0:

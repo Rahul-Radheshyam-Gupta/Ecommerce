@@ -1,254 +1,441 @@
-{% extends 'store/main.html' %}
+<!DOCTYPE html>
 {% load static %}
-{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <style>
 
-<style>  
-/* body{
-  background-image: url('/static/images/theem1.jpg') !important;
-  background-repeat: no-repeat;
-  background-size: 100%;
-  opacity:0.8;
-}   */
-    .input-container {
-      display: -ms-flexbox; /* IE10 */
-      display: flex;
-      width: 100%;
-      margin-bottom: 15px;
-    }
-    
-    .icon {
-      padding: 13px;
-      background: #3931af;
-      color: white;
-      min-width: 50px;
-      text-align: center;
-      border-radius:2px;
-    }
-    
-    .input-field {
-      width: 100%;
-      padding: 10px;
-      outline: none;
-    }
-    
-    .input-field:focus {
-      padding: 10px;
-      border: 1px solid #3931af;
-    }
-    
-    /* Set a style for the submit button */
-    .btn {
-      background-color: #3931af;
-      color: white;
-      padding: 15px 20px;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-    }
-    
-    .btn:hover {
-      opacity: 1;
-      border:2px solid #3931af;
-      background-color:white;
-      color: black;
-    }
-    .error {
-      background-color: white;
-      color: red;
-      padding: 10px 5px;
-      border: 1px solid black;
-      border-radius:2px;
-      width: 100%;
-      font-weight: bold;
-      opacity: 1;
-    }
-	.mb1 {
-		margin-left: 20px;
-		margin-right: 10px;
-		margin-bottom: 10px;
-		height:35px;
-		width: 90%;
-	}
-	.btn{
-		width: 80%;
-		height:40px;
-		padding: 12px;
-		margin-left: 35px;
-		margin-top: 5px;
+body{
+  background-image:linear-gradient(to right,rgb(0, 2, 14),#0e0d0d,rgb(0, 2, 14))!important;
 
-	}
-	.row-image{
-		width: 40px;
-		height:45px;
-	}
-	#myTable tr.header, #myTable tr:hover {
-	/* Add a grey background color to the table header and on hover */
-	background-color: #f1f1f1;
-	}
-	#myInput{
-		float:right;
-	}
-  .pointer{
-    cursor: pointer;
-  }
-  .sort{
-    height: 4px;
-    width: 8px;
-    cursor: pointer;
-    display: block;
+  opacity:1;
+}
+  .input-container {
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.icon {
+  padding: 13px;
+  background: #3931af;
+  color: white;
+  min-width: 50px;
+  text-align: center;
+  border-radius:2px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  padding: 10px;
+  border: 1px solid #3931af;
+}
+
+/* Set a style for the submit button */
+.btn {
+  background-color: #3931af;
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  cursor:;
+  width: 100%;
+}
+
+.btn:hover {
+  opacity: 1;
+  border:2px solid #3931af;
+  background-color:white;
+  color: black;
+}
+.error {
+  background-color: white;
+  color: red;
+  padding: 10px 5px;
+  border: 1px solid black;
+  border-radius:2px;
+  width: 100%;
+  font-weight: bold;
+  opacity: 1;
+}
+.mb1 {
+    margin-left: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    height:35px;
+    width: 90%;
+}
+.btn{
+    width: 80%;
+    height:40px;
+    padding: 12px;
+    margin-left: 35px;
     margin-top: 5px;
-    transition: .1s;
+
+}
+.row-image{
+    width: 42px;
+    height:45px;
+}
+#myTable tr.header, #myTable tr:hover {
+/* Add a grey background color to the table header and on hover */
+background-color: #f1f1f1;
+}
+#myInput{
+    float:right;
+}
+
+.glyphicon{
+  cursor: pointer !important;
+}
+#example_paginate{
+  padding-bottom: 10px!important;
+}
+.glyphicon:hover{
+  transform:scale(1.2);
+  font-weight: bolder;
+  padding-bottom: 10px;
+}
+#image{
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 20px;
   }
+
+#reset{
+  color:black;
+  float:right;
+
+}
+
+
+*{
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+}
+body{
+  font-family: montserrat;
+}
+nav{
+  background: #0082e6;
+  height: 60px;
+  width: 100%;
+}
+label.logo{
+  color: white;
+  font-size: 35px;
+  line-height: 80px;
+  padding: 0 100px;
+  font-weight: bold;
+}
+nav ul{
+  float: right;
+  margin-right: 30px!important;
+}
+nav ul li{
+  display: inline-block;
+  line-height: 80px;
+  margin: 0 5px;
+}
+nav ul li a{
+  color: white;
+  font-size: 17px;
+  padding: 7px 13px;
+  border-radius: 3px;
+}
+a.active,a:hover{
+  background: #1b9bff;
+  transition: .5s;
+}
+.checkbtn{
+  font-size: 30px;
+  color: white;
+  float: right;
+  line-height: 80px;
+  margin-right: 40px;
+  cursor: pointer;
+  display: none;
+}
+#check{
+  display: none;
+}
+@media (max-width: 952px){
+  label.logo{
+    font-size: 30px;
+    padding-left: 50px;
+  }
+  nav ul li a{
+    font-size: 16px;
+  }
+}
+@media (max-width: 858px){
+  .checkbtn{
+    display: block;
+  }
+  ul{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: #2c3e50;
+    top: 50px;
+    left: -100%;
+    text-align: center;
+    transition: all .5s;
+  }
+  nav ul li{
+    display: block;
+    margin: 50px 0;
+    line-height: 30px;
+  }
+  nav ul li a{
+    font-size: 20px;
+    color: white!important;
+    opacity: 1;
+  }
+  a:hover,a.active{
+    background: none;
+    transform:scale(1.2);
+    color: #0082e6;
+  }
+  #check:checked ~ ul{
+    left: 0;
+  }
+}
+section{
+  background: #2c3e50;
+  background-size: cover;
+  height: calc(100vh - 80px);
+}
+
+
+.navbar-brand a:hover{
+  transform:scale(1.2);
+}
 
     </style>
+    <nav class="navbar navbar-inverse" id="navbar" style="overflow: hidden;">
+          <input type="checkbox" id="check">
+          <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+          </label>
+            <label class="logo"><a class="navbar-brand" href="{% url 'store' %}">Ecom</a></label>
 
-<div class="container">
-    <div style="margin-top:5px;">
-      <div class="row">
-        <div class="col-md-4" style="margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
-          <strong>
-          <p style="padding-top: 25px;">Add a Product </p>
-          </strong>
-          <hr>
-                  <form method="POST" id="signup-form" action="{% url 'admin-dashboard' %}" data-toggle="validate" enctype='multipart/form-data' style="max-width:500px;border:1px;">
+            <ul class="nav navbar-nav navbar-right">
+            <li style="margin:0 20px;"><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
+            {% if request.session.authenticated %}
+                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                <li><a href="{% url 'admin-dashboard' %}"><span class="glyphicon glyphicon-log-in"></span> Admin Page</a></li>
+            {% else %}
+                <li><a href="{% url 'registration' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% endif %}
+            </ul>
+        </nav>
+        <section></section>
+    <div class="container">
+        <div style="margin-top:5px;">
+          <div class="row">
+            <div class="col-md-4" style="margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
+              <strong>
+              <p style="padding-top: 25px;"><span id="head">Add a Product </span> <button type="button" id="reset" onclick="reset_form()">Reset</button></p>
+
+              </strong>
+              <hr>
+                  <form method="POST" id="product-form"  data-toggle="validate" enctype='multipart/form-data' style="max-width:500px;border:1px;">
                       {% csrf_token %}
-                        <input class="input-field mb1" type="text" placeholder="Write Product Name" name="name" required>
-                        <input class="input-field mb1" type="text" placeholder="Short Product Description" name="description" required>
-                        <input class="input-field mb1" type="number" placeholder="Enter Price" name="price" required>
-                        <input class="input-field mb1" type="file" placeholder="upload a product Image" title="Upload Product Image" name="image" required>
-            <input type="checkbox" name="digital"> Is this digital product?
-            <p class="text-danger error {% if not error %} hidden {% endif %}">{{error}}</p>
-            <hr>
-                      <button type="submit" class="btn">Register</button>
-            </form>
-            <br>
-        </div>
-        <div class="col-md-7" style="margin-bottom: 0%;margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
-          <strong><p style="padding-top: 20px;">Product List </p></strong>
-          <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for a product.."><br>
-          <table id="myTable" class="table row-border order-column" width="100%">
-              <thead>
-                <th class="text-center pointer" onclick="sortTable(0)">Sr. No.
-                  <div style="float: right; height: 10px;margin-left: -12px;margin-right: 12px;"> 
-                    <img class="sort" src="{% static  'images/up-arrow.png' %}">
-                    <img class="sort"  src="{% static  'images/down-arrow.png' %}">
-                  </div>
-                </th>
-                <th>Porduct Image</th>
-                <th class="text-center pointer" onclick="sortTable(2)">Product Name
-                  <div style="float: right; height: 10px;margin-left: -12px;margin-right: 12px;"> 
-                    <img class="sort" src="{% static  'images/up-arrow.png' %}">
-                    <img class="sort"  src="{% static  'images/down-arrow.png' %}">
-                  </div>
-                </th>
-                <th class="text-center">Unit Price</th>
-                <th class="text-center pointer" onclick="sortTable(4)">Description
-                  <div style="float: right; height: 10px;margin-left: -12px;margin-right: 12px;"> 
-                    <img class="sort"  src="{% static  'images/up-arrow.png' %}">
-                    <img class="sort"  src="{% static  'images/down-arrow.png' %}">
-                  </div>
-                </th>
-              </thead>
-              <tbody>
-                {% for product in products %}
-                  <tr>
-                    <td class="text-center">{{forloop.counter}}</td>
-                    <td><img class="row-image" src="{{product.get_image_url}}"></td>
-                    <td>{{product.name}}</td></td>
-                    <td> {{product.price | floatformat:2}} </td>
-                    <td>
-                      {% if product.description %}
-                        {{ product.description}}
-                      {% else %}
+                      <input type="hidden" id="id" name="id">
+                      <input type="hidden" id="action" name="action">
+                      <input class="input-field mb1" type="text" placeholder="Write Product Name" id="name"  name="name" required>
+                      <input class="input-field mb1" type="text" placeholder="Short Product Description" id="description" name="description">
+                      <input class="input-field mb1" type="number" placeholder="Enter Price" id="price" name="price" required>
+                      <input class="input-field mb1" type="file" placeholder="upload a product Image" title="Upload Product Image" id="image" name="image" >
+                      <input type="checkbox"style="margin-left:20px;" id="digital" name="digital"> <small style="padding-bottom: 5px;"> Is this digital product?</small>
+                      <p class="text-danger error {% if not error %} hidden {% endif %}">{{error}}</p>
+                      <p class="text-danger mb1" style="font-size:80%;">* All fields are required.</p>
+                      <button type="submit" class="btn" id="add">Add</button>
+                </form>
+                <br>
+            </div>
+            <div class="col-md-7" style="margin-bottom: 0%;margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
+              <strong><p style="padding-top: 20px;font-size:18px;">Product List </p></strong><hr>
+              <!-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for a product.."><br> -->
+              <table id="example" class="table row-border order-column" width="100%" >
+                  <thead>
+                    <th class="text-center">Sr. No.
 
-                      {% endif %}
-                    </td>
-                  </tr>
-                {% endfor %}
+                    </th>
+                    <th>Porduct Image</th>
+                    <th class="text-center">Product Name </th>
+                    <th class="text-center">Unit Price</th>
+                    <th class="text-center" >Description </th>
+                    <th data-orderable="false">Action</th>
+                  </thead>
+                  <tbody>
+                    {% for product in products %}
+                      <tr>
+                        <td class="text-center">{{forloop.counter}}</td>
+                        <td><img class="row-image" src="{{product.get_image_url}}"></td>
+                        <td>{{product.name}}</td></td>
+                        <td> {{product.price | floatformat:2}} </td>
+                        <td>
+                          {% if product.description %}
+                            {{ product.description}}
+                          {% else %}
 
-              </tbody>
-            </table>
+                          {% endif %}
+                        </td>
+                        <td class="">
+                          <span class="glyphicon update" data-val="add" data-id="{{product.id}}" data-price="{{product.price}}" data-url="{{product.get_image_url}}" data-name="{{product.name}}" data-desc="{{ product.description}}" data-digital="{{ product.digital}}" style="color:green;font-size:75%;font-weight:900;">Update</span>&nbsp;|
+                          <span data-val="delete" data-id="{{product.id}}" data-url="{{product.get_image_url}}" data-price="{{product.price}}" data-name="{{product.name}}" data-desc="{{ product.description}}" data-digital="{{ product.digital}}" class="glyphicon archieve" style="color:orange;font-size:75%;font-weight:900;">Hide</span>&nbsp;|
+                          <span data-val="delete" data-id="{{product.id}}" data-url="{{product.get_image_url}}" data-price="{{product.price}}" data-name="{{product.name}}" data-desc="{{ product.description}}" data-digital="{{ product.digital}}" class="glyphicon delete" style="color:red;font-size:75%;font-weight:900;">Delete</span>
+                        </td>
+                      </tr>
+                    {% endfor %}
+
+                  </tbody>
+                </table>
+            </div>
+          </div>
         </div>
-      </div>
     </div>
-</div>
-<script type="text/javascript">
-function myFunction() {
-  // Declare variables
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
 
-  // Loop through all table rows, and hide those who don't match the search query
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[2];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+      <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+      <script type="text/javascript">
+      function reset_form(){
+        $("#product-form")[0].reset();
+        $("#head").text("Add a Product");
       }
-    }
-  }
-}
+      $("section").hide();
+      $(".checkbtn").click(function(){
+        $("section").toggle();
+      })
 
-function sortTable(n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById("myTable");
-  switching = true;
-  // Set the sorting direction to ascending:
-  dir = "asc";
-  /* Make a loop that will continue until
-  no switching has been done: */
-  while (switching) {
-    // Start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /* Loop through all table rows (except the
-    first, which contains table headers): */
-    for (i = 1; i < (rows.length - 1); i++) {
-      // Start by saying there should be no switching:
-      shouldSwitch = false;
-      /* Get the two elements you want to compare,
-      one from current row and one from the next: */
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      /* Check if the two rows should switch place,
-      based on the direction, asc or desc: */
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          // If so, mark as a switch and break the loop:
-          shouldSwitch = true;
-          break;
+      $("#image").change(function(){
+        $("#image").text(this.files[0].name);
+      });
+
+      $("#product-form").submit(function(e){
+        e.preventDefault();
+        $("#action").val("add");
+        var id = $("#id").val();
+        var name = $("#name").val();
+        var url = $("#url").val();
+        var price = $("#price").val();
+        var description = $("#description").val();
+        var digital = $("#digital").val();
+        console.log("add ",action,id);
+        var data = new FormData(this);
+        console.log("frm",data)
+        $.ajax({
+          url: '{% url "admin-dashboard" %}',
+          // data:{
+          //   'id':id,
+          //   'action':'add',
+          //   'csrfmiddlewaretoken':'{{ csrf_token }}',
+          //   'name':name,
+          //   'url':url,
+          //   'price':price,
+          //   'desc':description,
+          //   'digital':digital
+          // },
+          data:data,
+          method:"POST",
+          dataType:'json/application',
+          contentType:false,
+          processData:false,
+          success: function(data){
+            console.log(data)
+            window.location.reload();
+          },
+          error: function(data){
+            console.log("error",data);
+            if(data.status==200){
+              window.location.reload();
+            }
+          }
+
+        })
+      })
+
+        $('#example').DataTable({
+          "scrollX": true
+            });
+
+
+      $(".update").click(function(e){
+        var action = this.getAttribute("data-val");
+        var id = this.getAttribute("data-id");
+        var name = this.getAttribute("data-name");
+        var url = this.getAttribute("data-url");
+        var price = this.getAttribute("data-price");
+        var description = this.getAttribute("data-desc");
+        var digital = this.getAttribute("data-digital");
+        var text = "Update Product - "+name;
+        $("#head").text(text);
+        $("#name").val(name);
+        $("#action").val("add");
+        $("#id").val(id);
+        $("#price").val(parseFloat(price));
+        if(description!="None"){
+          $("#description").val(description);
         }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          // If so, mark as a switch and break the loop:
-          shouldSwitch = true;
-          break;
+        if(digital=="True"){
+          $("#digital").prop("checked",true);
         }
-      }
-    }
-    if (shouldSwitch) {
-      /* If a switch has been marked, make the switch
-      and mark that a switch has been done: */
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      // Each time a switch is done, increase this count by 1:
-      switchcount ++;
-    } else {
-      /* If no switching has been done AND the direction is "asc",
-      set the direction to "desc" and run the while loop again. */
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
-        switching = true;
-      }
-    }
-  }
-}
-</script>
+        console.log("add ",url,action,id,name,parseFloat(price),description=="None",typeof(digital));
+      })
 
-{% endblock content %}
+
+      $(".delete").click(function(e){
+        $("#action").val("delete");
+        var action = this.getAttribute("data-val");
+        var id = this.getAttribute("data-id");
+        console.log("delete ",action,id);
+        $.ajax({
+          url: '{% url "admin-dashboard" %}',
+          data:{
+            'id':id,
+            'action':'delete',
+            'csrfmiddlewaretoken':'{{ csrf_token }}'
+
+          },
+          method:"POST",
+          dataType:'json/application',
+          success: function(data){
+            console.log(data)
+            window.location.reload();
+          },
+          error: function(data){
+            console.log("error",data);
+            if(data.status==200){
+              window.location.reload();
+            }
+          }
+
+        })
+      })
+      </script>
+</body>
+</html>

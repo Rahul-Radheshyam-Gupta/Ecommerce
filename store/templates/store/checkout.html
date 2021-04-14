@@ -16,7 +16,7 @@
 		width: 70px;
 		border-radius: 2px;
 	}
-	
+
 </style>
 
      <div class="row">
@@ -68,7 +68,7 @@
 					Make Payment (Work In Progress)
 				</button>
 			</div>
-			
+
 		</div>
 
 		<div class="col-lg-6">
@@ -79,7 +79,7 @@
 				<hr>
 
 
-					<table class="table">
+					<table class="table" id="checkout-table">
 						<thead>
 							<th class="text-center"></th>
 							<th class="text-center">Product Name</th>
@@ -99,7 +99,7 @@
 							{% else %}
 									<tr> No Item in your Cart  </tr>
 							{% endif %}
-									
+
 								<tr>
 									<th class="text-center">Items:</th>
 									<td class="text-center"></td>
@@ -118,9 +118,13 @@
 		</div>
 	</div>
 	<script>
+		$('#checkout-table').DataTable({
+          // ajax:'{% url "admin-dashboard" %}?attendance=true',
+            });
+
 		console.log("=== ship ",'{{shipping}}')
 		var form = document.getElementById("shipping-form")
-		var btn = document.getElementById("shipping-btn") 
+		var btn = document.getElementById("shipping-btn")
 
 		btn.addEventListener("click",function(){
 			submit_shipping(form);
