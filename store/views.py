@@ -329,5 +329,3 @@ def updateItem(request):
 				order_item.delete()
 			return JsonResponse({'message':"Successful","get_total_items":order.get_total_items,"get_cart_total":order.get_cart_total})
 	return JsonResponse("Item added",safe=False)
-
-
