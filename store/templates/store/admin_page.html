@@ -236,7 +236,7 @@ section{
           <label for="check" class="checkbtn">
             <i class="fas fa-bars"></i>
           </label>
-            <label class="logo"><a class="navbar-brand" href="{% url 'store' %}">Ecom</a></label>
+            <label class="logo"><a class="navbar-brand" href="{% url 'store' %}" style="color:white!important;font-size:18px;">Ecom</a></label>
 
             <ul class="nav navbar-nav navbar-right">
             <li style="margin:0 20px;"><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>

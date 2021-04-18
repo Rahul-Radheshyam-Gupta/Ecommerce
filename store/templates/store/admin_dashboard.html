@@ -252,6 +252,13 @@ section{
 .head{
 	font-size: 25px;
 	font-weight: bold;
+  opacity:1;
+  color:white;
+  letter-spacing:1px;
+}
+.cw{
+  color:white;
+  letter-spacing:0.8px;
 }
     </style>
     <nav class="navbar navbar-inverse" id="navbar" style="overflow: hidden;">
@@ -259,7 +266,7 @@ section{
           <label for="check" class="checkbtn">
             <i class="fas fa-bars"></i>
           </label>
-            <label class="logo"><a class="navbar-brand" href="{% url 'store' %}">Ecom</a></label>
+            <label class="logo"><a class="navbar-brand" href="{% url 'store' %}" style="color:white!important;font-size:18px;">Ecom</a></label>
 
             <ul class="">
             <li><a href="{% url 'store' %}">Dashboard</a></li>
@@ -271,12 +278,13 @@ section{
                 <li><a href="{% url 'registration' %}">Sign Up</a></li>
                 <li><a href="{% url 'login' %}">Login</a></li>
             {% endif %}
+            <li><a href="https://rahulgupta1996.pythonanywhere.com/contact/">Any Query</a></li>
             </ul>
         </nav>
         <section></section>
     <div class="container">
       <p class="text-left head"> Admin Dashboard </p>
-      <p class="small mb-2"> Manage your products here </p>
+      <p class="small mb-2 cw"> Manage your products here </p>
         <div style="margin-top:5px;">
           <div class="row">
             <div class="col-md-4" style="margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">

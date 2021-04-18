@@ -199,6 +199,18 @@ section{
 .head{
 	font-size: 25px;
 	font-weight: bold;
+  opacity:1;
+  color:white;
+  letter-spacing:1px;
+}
+.cw{
+  color:white;
+}
+.fab{
+  color:white;
+}
+.fab:hover{
+  transform:scale(1.5);
 }
   </style>
 
@@ -207,7 +219,7 @@ section{
           <label for="check" class="checkbtn">
             <i class="fas fa-bars"></i>
           </label>
-            <label class="logo"><a class="navbar-brand" href="{% url 'store' %}">Ecom</a></label>
+            <label class="logo"><a class="navbar-brand" href="{% url 'store' %}" style="color:white!important;font-size:18px;">Ecom</a></label>
 
           <ul class="">
             <li><a href="{% url 'store' %}">Dashboard</a></li>
@@ -221,6 +233,7 @@ section{
               <li><a href="{% url 'registration' %}"> Sign Up</a></li>
               <li><a href="{% url 'login' %}">Login</a></li>
             {% endif %}
+            <li><a href="https://rahulgupta1996.pythonanywhere.com/contact/">Any Query</a></li>
           </ul>
       </nav>
 
@@ -233,6 +246,12 @@ section{
 
                 {% endblock content %}
           </div>
+          <footer class="mx-auto">
+            <p class="text-center cw">&copy; Copyright 2020-2021 by <strong><a href="https://rahulgupta1996.pythonanywhere.com/" style="text-decoration:none;color:white;">Rahul Gupta</a></strong>&nbsp;-&nbsp;&nbsp;
+                  <a href="https://www.linkedin.com/in/rahul-gupta-1b2578170/" target="_blank"  style="text-decoration: none;" > <i class="fab fa-linkedin"></i>&nbsp;</a>&nbsp;
+                  <a href="https://github.com/Rahul-Radheshyam-Gupta" target="_blank"  style="text-decoration: none;" > <i class="fab fa-github-square"></i>  &nbsp;</a>
+                </p>
+          </footer>
 
 
           <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
