@@ -76,10 +76,10 @@
 									<td> <p id="price_{{item.product.id}}">{{item.product.price | floatformat:2}}</p> </td>
 									<td>
 										<div class="row">
-											<div class="col-sm-1"> 
+											<div class="col-sm-1">
 												<p class="quantity" id="quantity_{{item.product.id}}" style="margin-top: 6px;" >{{item.quantity}}</p>
 											</div>
-											<div class="col-sm-1"> 
+											<div class="col-sm-1">
 												<img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="add" src="{% static  'images/up-arrow.png' %}">
 												<img class="chg-quantity update-cart" data-product="{{item.product.id}}" data-action="remove" src="{% static  'images/down-arrow.png' %}">
 											</div>
@@ -95,7 +95,7 @@
 					{% endif %}
 						</tbody>
 					</table>
-					
+
 
 			</div>
 		</div>
@@ -104,7 +104,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-	
+
 	<script>
 
 		$('#cart-table').DataTable({

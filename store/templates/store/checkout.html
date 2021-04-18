@@ -18,7 +18,7 @@
 		width: 70px;
 		border-radius: 2px;
 	}
-	
+
 </style>
 <p class="text-left head"> CheckOut </p>
      <div class="row">
@@ -70,7 +70,7 @@
 					Make Payment (Work In Progress)
 				</button>
 			</div>
-			
+
 		</div>
 
 		<div class="col-lg-6">
@@ -101,7 +101,7 @@
 							{% else %}
 									<tr> No Item in your Cart  </tr>
 							{% endif %}
-									
+
 								<tr>
 									<th class="text-center">Items:</th>
 									<td class="text-center"></td>
@@ -131,7 +131,7 @@
 
 		console.log("=== ship ",'{{shipping}}')
 		var form = document.getElementById("shipping-form")
-		var btn = document.getElementById("shipping-btn") 
+		var btn = document.getElementById("shipping-btn")
 
 		btn.addEventListener("click",function(){
 			submit_shipping(form);
