@@ -55,12 +55,9 @@
 
 <body>
   <style>
-.navbar-brand a:hover{
-  transform:scale(1.1);
-}
 body{
   background-image:linear-gradient(to right,rgb(0, 2, 14),#0e0d0d,rgb(0, 2, 14))!important;
-
+  font-family: montserrat!important;
   opacity:1;
 }  
 span.cart-t {
@@ -96,8 +93,7 @@ body{
   font-family: montserrat;
 }
 nav{
-  background: #0082e6;
-  height: 60px;
+  height: 65px;
   width: 100%;
 }
 label.logo{
@@ -105,7 +101,8 @@ label.logo{
   font-size: 35px;
   line-height: 80px;
   padding: 0 100px;
-  font-weight: bold;
+  opacity: 1!important;
+  font-weight: bolder;
 }
 nav ul{
   float: right;
@@ -113,17 +110,23 @@ nav ul{
 }
 nav ul li{
   display: inline-block;
-  line-height: 80px;
+  line-height: 65px;
   margin: 0 5px;
 }
 nav ul li a{
   color: white;
+  opacity: 0.9;
   font-size: 17px;
   padding: 7px 13px;
-  border-radius: 3px;
+  font-weight: bold;
+  text-decoration: none;
 }
-a.active,a:hover{
-  background: #1b9bff;
+nav ul li a:hover{
+  transform:scale(1.2)!important;
+  color: #07b4e9;
+  font-weight: bolder;
+  opacity: 1;
+  text-decoration: none;
   transition: .5s;
 }
 .checkbtn{
@@ -155,8 +158,8 @@ a.active,a:hover{
     position: fixed;
     width: 100%;
     height: 100vh;
-    background: #2c3e50;
-    top: 50px;
+    background: black;
+    top: 60px;
     left: -100%;
     text-align: center;
     transition: all .5s;
@@ -172,16 +175,18 @@ a.active,a:hover{
     opacity: 1;
   }
   a:hover,a.active{
-    background: none;
+    text-decoration: none;
     transform:scale(1.2);
-    color: #0082e6;
   }
   #check:checked ~ ul{
     left: 0;
   }
+  .container{
+    overscroll-behavior: contain;
+  }
 }
 section{
-  background: #2c3e50;
+  background: black;
   background-size: cover;
   height: calc(100vh - 80px);
 }
@@ -191,6 +196,10 @@ section{
   transform:scale(1.2);
 }
 
+.head{
+	font-size: 25px;
+	font-weight: bold;
+}
   </style>
 
     <nav class="navbar navbar-inverse" id="navbar" style="overflow: hidden;">
@@ -201,14 +210,16 @@ section{
             <label class="logo"><a class="navbar-brand" href="{% url 'store' %}">Ecom</a></label>
 
           <ul class="">
+            <li><a href="{% url 'store' %}">Dashboard</a></li>
             <li><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
             <!-- <li><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li> -->
             {% if request.session.authenticated %}
-              <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-              <li><a href="{% url 'admin-dashboard' %}"><span class="glyphicon glyphicon-log-in"></span> Admin Page</a></li>
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+              <li><a href="{% url 'admin-dashboard' %}">Admin Dashboard</a></li>
+              <!-- <span class="glyphicon glyphicon-log-in"></span>  -->
             {% else %}
-              <li><a href="{% url 'registration' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-              <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+              <li><a href="{% url 'registration' %}"> Sign Up</a></li>
+              <li><a href="{% url 'login' %}">Login</a></li>
             {% endif %}
           </ul>
       </nav>
@@ -231,8 +242,10 @@ section{
           <script src="{% static 'js/checkout.js' %}"></script>
           <script>
             $("section").hide();
+            $(".container").show();
             $(".checkbtn").click(function(){
-              $("section").toggle();
+              $("section").toggle(1000);
+              $(".container").toggle(1000);
             })
           </script>
       </body>

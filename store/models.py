@@ -48,6 +48,14 @@ class Product(models.Model):
 		except :
 			return ''
 
+	@property
+	def get_total_item_sell(self):
+		try:
+			items = self.orderitem_set.values_list('quantity',flat=True)
+			return sum(items)
+		except :
+			return 0
+
 # consider it as cart --- as cart table
 class Order(models.Model):
 	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)

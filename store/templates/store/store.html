@@ -1,6 +1,9 @@
 {% extends 'store/main.html' %}
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 <style>
 
 .view{
@@ -25,9 +28,12 @@ border:1px solid #195;}
 .thumbnail:hover{
 	transform:scale(1.1);	
 }
-
+.mb-3{
+	margin-bottom:20px;
+}
 
 </style>
+<p class="text-left head"> Dashboard </p><small class="text-left text-muted" style='margin-left: 10px;'> List of available products based on your recent activities </small>
 
 	{% for product in products %}
 		<div class=" {% if forloop.counter|divisibleby:3 %} row {% endif %}">
@@ -45,4 +51,9 @@ border:1px solid #195;}
 		</div>
 	{% endfor %}
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	
 {% endblock content %}

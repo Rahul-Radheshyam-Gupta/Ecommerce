@@ -25,8 +25,9 @@ def authenticate_vendor(view_func):
     print("Yes Vendor authenticated")
     return view_func(self,request,*args,**kwargs)
    else:
+    print("right")
     error['error'] = 'You Are not Vendor.Activate Venor Option from Your setting.'
-   return render(request,'store/store.html',error)          
+   return HttpResponseRedirect(reverse('store'))         
   except Exception as e:
    print(str(e))
    error['error'] = 'You Are not login.Please Login'
@@ -40,7 +41,7 @@ class AdminDashboard(TemplateView):
 	@authenticate_vendor
 	def get(self,request):
 		customer = request.user.customer
-		products = Product.objects.filter(added_by=customer,is_active=True)
+		products = Product.objects.filter(added_by=customer)
 		return render(request, self.template_name,{'products':products})
 	def post(self,request):
 		added_by = request.user.customer
@@ -79,6 +80,13 @@ class AdminDashboard(TemplateView):
 			elif request.POST.get("action")=='delete':
 				product = Product.objects.get(id=id)
 				product.delete()
+			else:
+				product = Product.objects.get(id=id)
+				if request.POST.get("action")=='hide':
+					product.is_active = False
+				elif request.POST.get("action")=='show':
+					product.is_active = True
+				product.save()
 			return HttpResponse("{'message':'Successful'}",content_type="application/json",status=HTTPStatus.OK)
 		else:
 
@@ -186,7 +194,7 @@ def store_login(request):
 def store(request):
 	context = {}
 	template_name = 'store/store.html'
-	products = Product.objects.all()
+	products = Product.objects.filter(is_active=True)
 	context["products"] = products
 	if request.user.is_authenticated:
 		customer = request.user.customer
