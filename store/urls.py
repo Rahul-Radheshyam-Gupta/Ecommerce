@@ -10,4 +10,7 @@ urlpatterns = [
     path('login/',views.store_login,name="login"),
     path('logout/',views.log_out,name="logout"),
     path('admin_dashboard/',views.AdminDashboard.as_view(),name="admin-dashboard"),
+    path('product/<int:id>/',views.product_detail,name="product-detail"),
+    path('product_feature/',views.product_detail_add,name="product-feature"),
+    path('feature/<int:id>/',views.product_feature_delete,name="feature-delete"),
 ]

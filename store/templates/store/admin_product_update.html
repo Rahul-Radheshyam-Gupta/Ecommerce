@@ -1,0 +1,153 @@
+{% extends 'store/admin_main.html' %}
+{% load static %}
+
+{% block admin_content %}
+    <div class="container">
+      <p class="text-left head"> Product Detail </p>
+      <p class="small mb-1 cw"> Add features </p>
+        <div>
+          <div class="row" style="background-color:whitesmoke;margin-bottom: 20px;">
+            <div class="col-md-4" style="margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
+              <div class="card" style="padding-top: 8px;">
+                <h4 class="card-title"><label>{{product.name|title}}</label>  <button data-val="delete" type="button" data-id="{{product.id}}" title="delete a product permanently"  class="delete-product {% if product.have_items %} disabled {% endif %}"> Delete</button> </h4>
+                <hr>
+                <img src="{{product.get_image_url}}" class="card-img-top" alt="{{product.name}}">
+                <div class="card-body mb-3">
+                  <label>Description</label>
+                  <p class="card-text">{{product.description}}</p>
+                  <p class="text-danger small mb-3">* You cant delete a product if its added in customer's cart.</p>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-7" id="feature-div" style="margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
+
+              <h3 style="font-size:18px;font-weight:900;">Add a features for {{product.name|title}}</h3>
+              <!-- <button type="button" id="reset" onclick="reset_form()">Reset</button> -->
+              <hr>
+                  <form method="POST" id="product-feature-form"  data-toggle="validate" enctype='multipart/form-data' style="max-width:500px;border:1px;">
+                      {% csrf_token %}
+                      <input type="hidden" id="id" value={{product.id}} name="id">
+                      <input type="hidden" id="action" name="action">
+                      <input class="input-field mb1" type="text" placeholder="Write a feature" id="feature"  name="feature" required><button type="submit" id="add-product">Add</button> 
+                      <p class="text-danger error {% if not error %} hidden {% endif %}">{{error}}</p>
+
+                </form>
+                <br>
+                <h5>Feature List</h5>
+
+                <table class="table row-border order-column" width="100%" >
+                  <thead>
+                    <th class="text-center">Sr. No.</th>
+                    <th class="text-center"> Feature</th>
+                    <th></th>
+                  </thead>
+                  <tbody>
+                    {% for i in features %}
+                    <tr>
+                      <td class="text-center"> {{ forloop.counter }} </td>
+                      <td class="text-center"> {{i.feature}}</td>
+                      <td class="text-center"><a href='{% url "feature-delete" i.id %}?admin=true&product-id={{product.id}}' data-val="delete" type="button" data-id="{{i.id}}" data-product-id="{{product.id}}" title="delete a product permanently"  class="delete-feature"> X</a></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+    </div>
+{% endblock admin_content %}
+
+{% block script %}
+      <script type="text/javascript">
+      // function reset_form(){
+      //   $("#product-feature-form")[0].reset();
+      //   $("#head").text("Add a Product");
+      // }
+      $("section").hide();
+      $(".checkbtn").click(function(){
+          $("section").toggle(700);
+          $(".container").toggle(800);
+        })
+
+      $("#image").change(function(){
+        $("#image").text(this.files[0].name);
+      });
+
+      $("#product-feature-form").submit(function(e){
+        e.preventDefault();
+        $("#action").val("add");
+        var id = $("#id").val();
+        var feature = $("#feature").val();
+        data = {
+          "id":id,
+          "feature":feature,
+          'csrfmiddlewaretoken':'{{ csrf_token }}'
+        }
+        // var data = new FormData(this);
+        console.log("frm",data)
+        $.ajax({
+          url: '{% url "product-feature" %}',
+          data:{
+            "id":id,
+            "feature":feature,
+            'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+          method:"POST",
+          dataType:'json/application',
+    
+          success: function(data){
+            console.log(data)
+            // window.location.reload();
+          },
+          error: function(data){
+            console.log("error",data);
+            // parser = new DOMParser();
+            // doc = parser.parseFromString(data, "text/html");
+            // console.log("doc ",doc)
+            // newDiv = doc.getElementById("feature-div")
+            // console.log("new dev before",newDiv)
+            // $("#feature-div").replaceWith(newDiv);
+            if(data.status==200){
+              window.location.reload();
+
+            }
+          }
+
+        })
+      
+      })
+
+
+
+
+      $(".delete-product").click(function(e){
+
+        var action = this.getAttribute("data-val");
+        var id = this.getAttribute("data-id");
+        console.log("delete ",action,id);
+        $.ajax({
+          url: '{% url "admin-dashboard" %}',
+          data:{
+            'id':id,
+            'action':'delete',
+            'csrfmiddlewaretoken':'{{ csrf_token }}'
+
+          },
+          method:"POST",
+          dataType:'json/application',
+          success: function(data){
+            console.log(data)
+            window.location.reload();
+          },
+          error: function(data){
+            console.log("error",data);
+            if(data.status==200){
+              window.location.reload();
+            }
+          }
+
+        })
+      })
+      </script>
+{% endblock script %}

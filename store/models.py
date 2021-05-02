@@ -40,7 +40,12 @@ class Product(models.Model):
 
 	def __str__(self):
 		return self.name
-	
+	@property
+	def have_items(self):
+		if self.orderitem_set.count()>0:
+			return True
+		else:
+			return False
 	@property
 	def get_image_url(self):
 		try:
@@ -55,6 +60,35 @@ class Product(models.Model):
 			return sum(items)
 		except :
 			return 0
+
+class ProductDetail(models.Model):
+	product = models.OneToOneField(Product, on_delete=models.CASCADE,related_name="product_detail", null=True)
+	long_description = models.TextField(max_length=1000,null=True,blank=True)    
+
+	def __str__(self):
+		return "product detail of "+ self.product.name
+
+
+class ProductFeatures(models.Model):
+	product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="features", null=True)
+	feature = models.CharField(max_length=250,null=True,blank=True)    
+
+	def __str__(self):
+		return "product features of "+ self.feature + self.product.name
+
+class ProductReview(models.Model):
+	product = models.OneToOneField(Product, on_delete=models.CASCADE, null=True)
+	customer = models.OneToOneField(Customer, on_delete=models.CASCADE, related_name="review",null=True,blank=True)
+	comment = models.TextField(max_length=1000,null=True,blank=True)
+	rating = models.PositiveIntegerField(range(1, 5),null=True,blank=True)
+    
+
+	def __str__(self):
+		return "product review of "+ self.product.name
+	
+
+
+
 
 # consider it as cart --- as cart table
 class Order(models.Model):

@@ -1,551 +1,259 @@
-<!DOCTYPE html>
+{% extends 'store/admin_main.html' %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-</head>
-<body>
-    <style>
 
-body{
-  background-image:linear-gradient(to right,rgb(0, 2, 14),#0e0d0d,rgb(0, 2, 14))!important;
+{% block admin_content %}
+  <div class="container">
+    <p class="text-left head"> Admin Dashboard </p>
+    <p class="small mb-2 cw"> Manage your products here </p>
+      <div style="margin-top:5px;">
+        <div class="row">
+          <div class="col-md-4" style="margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
+            <strong>
+            <p style="padding-top: 25px;"><label id="head">Add a Product </label> <button type="button" id="reset" onclick="reset_form()">Reset</button></p>
 
-  opacity:1;
-}
-  .input-container {
-    display: -ms-flexbox; /* IE10 */
-    display: flex;
-    width: 100%;
-    margin-bottom: 15px;
-}
+            </strong>
+            <hr>
+                <form method="POST" id="product-form"  data-toggle="validate" enctype='multipart/form-data' style="max-width:500px;border:1px;">
+                    {% csrf_token %}
+                    <input type="hidden" id="id" name="id">
+                    <input type="hidden" id="action" name="action">
+                    <input class="input-field mb1" type="text" placeholder="Write Product Name" id="name"  name="name" required>
+                    <input class="input-field mb1" type="text" placeholder="Short Product Description" id="description" name="description">
+                    <input class="input-field mb1" type="number" placeholder="Enter Price" id="price" step="0.1" name="price" required>
+                    <input class="input-field mb1" type="file" placeholder="upload a product Image" title="Upload Product Image" id="image" name="image" >
+                    <input type="checkbox"style="margin-left:20px;" id="digital" name="digital"> <small style="padding-bottom: 5px;"> Is this digital product?</small>
+                    <p class="text-danger error {% if not error %} hidden {% endif %}">{{error}}</p>
+                    <p class="text-danger mb1" style="font-size:80%;">* All fields are required.</p>
+                    <button type="submit" class="btn" id="add">Add</button>
+              </form>
+              <br>
+          </div>
+          <div class="col-md-7" style="margin-bottom: 0%;margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
+            <strong><p style="padding-top: 20px;font-size:18px;">Product List </p></strong><hr>
+            <!-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for a product.."><br> -->
+            <table id="example" class="table row-border order-column" width="100%" style="width:auto" >
+                <thead>
+                  <th class="text-center">Sr. No.
 
-.icon {
-  padding: 13px;
-  background: #3931af;
-  color: white;
-  min-width: 50px;
-  text-align: center;
-  border-radius:2px;
-}
+                  </th>
+                  <th>Porduct Image</th>
+                  <th class="text-center">Product Name </th>
+                  <th class="text-center">Unit Price</th>
+                  <th class="text-center" >Description </th>
+                  <th class="text-center" >No. of Unit Sold </th>
+                  <th data-orderable="false">Action</th>
+                </thead>
+                <tbody>
+                  {% for product in products %}
+                    <tr>
+                      <td class="text-center">{{forloop.counter}}</td>
+                      <td class="notexport"><img class="row-image" src="{{product.get_image_url}}" alt="{{product.name}}"></td>
+                      <td class="text-center">{{product.name}}</td></td>
+                      <td class="text-center"> {{product.price | floatformat:2}} </td>
+                      <td class="text-center">
+                        {% if product.description %}
+                          {{ product.description}}
+                        {% else %}
 
-.input-field {
-  width: 100%;
-  padding: 10px;
-  outline: none;
-}
+                        {% endif %}
+                      </td>
+                      <td>{{ product.get_total_item_sell}}</td>
+                      <td class="notexport text-center">
+                        <span class="glyphicon update" data-val="add" data-id="{{product.id}}" data-price="{{product.price}}" data-url="{{product.get_image_url}}" title="update a product" data-name="{{product.name}}" data-desc="{{ product.description}}" data-digital="{{ product.digital}}" style="color:green;font-size:75%;font-weight:900;">Update</span>&nbsp;|
+                        <span data-val="{% if product.is_active %}hide{% else %}show{% endif %}" data-id="{{product.id}}" class="glyphicon hide_show" title="hide or show a product on customer dashboard" style="color:rgba(238, 93, 9, 0.938);font-size:75%;font-weight:900;">
+                          {% if product.is_active %}Hide{% else %}Show{% endif %}</span>&nbsp;|
+                        <!-- <span data-val="delete" data-id="{{product.id}}" data-url="{{product.get_image_url}}" data-price="{{product.price}}" data-name="{{product.name}}" title="delete a product permanently" data-desc="{{ product.description}}" data-digital="{{ product.digital}}" class="glyphicon delete" style="color:red;font-size:75%;font-weight:900;">Delete</span>&nbsp;|&nbsp; -->
+                        <span class="glyphicon" ><a href="{% url 'product-detail' product.id %}?admin=true" style="color:rgba(3, 28, 245, 0.938);font-size:75%;font-weight:900;" data-val="add" data-id="{{product.id}}" style="color:green;font-size:75%;font-weight:900;">More</a></span>&nbsp;
+                      </td>
+                    </tr>
+                  {% endfor %}
 
-.input-field:focus {
-  padding: 10px;
-  border: 1px solid #3931af;
-}
-
-/* Set a style for the submit button */
-.btn {
-  background-color: #3931af;
-  color: white;
-  padding: 15px 20px;
-  border: none;
-  cursor:;
-  width: 100%;
-}
-
-.btn:hover {
-  opacity: 1;
-  border:2px solid #3931af;
-  background-color:white;
-  color: black;
-}
-.error {
-  background-color: white;
-  color: red;
-  padding: 10px 5px;
-  border: 1px solid black;
-  border-radius:2px;
-  width: 100%;
-  font-weight: bold;
-  opacity: 1;
-}
-.mb1 {
-    margin-left: 20px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    height:35px;
-    width: 90%;
-}
-.btn{
-    width: 80%;
-    height:40px;
-    padding: 12px;
-    margin-left: 35px;
-    margin-top: 5px;
-
-}
-.row-image{
-    width: 42px;
-    height:45px;
-}
-#myTable tr.header, #myTable tr:hover {
-/* Add a grey background color to the table header and on hover */
-background-color: #f1f1f1;
-}
-#myInput{
-    float:right;
-}
-
-.glyphicon{
-  cursor: pointer !important;
-}
-#example_paginate{
-  padding-bottom: 10px!important;
-}
-.glyphicon:hover{
-  transform:scale(1.2);
-  font-weight: bolder;
-  padding-bottom: 10px;
-}
-#image{
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    font-size: 12px;
-    margin-left: 20px;
-  }
-
-#reset{
-  float:right;
-  padding: 5px 10px;
-  border: 1px solid rgb(118, 118, 118);
-  border-radius: 2px;
-}
-#reset:hover{
-  border:1px solid red;
-  color:red;
-  font-weight: bold;
-}
-
-
-*{
-  padding: 0;
-  margin: 0;
-  text-decoration: none;
-  list-style: none;
-  box-sizing: border-box;
-}
-body{
-  font-family: montserrat;
-}
-nav{
-  background: #0082e6;
-  height: 60px;
-  width: 100%;
-}
-label.logo{
-  color: white;
-  font-size: 35px;
-  line-height: 80px;
-  padding: 0 100px;
-  font-weight: bold;
-}
-nav ul{
-  float: right;
-  margin-right: 30px!important;
-}
-nav ul li{
-  display: inline-block;
-  line-height: 55px;
-  margin: 0 5px;
-}
-nav ul li a{
-  color: white;
-  font-size: 17px;
-  padding: 7px 13px;
-  border-radius: 3px;
-  text-decoration:none;
-}
-a.active,a:hover{
-  text-decoration: none;
-  color: white;
-  font-weight: bolder;
-  transform:scale(1.2);
-
-}
-.checkbtn{
-  font-size: 30px;
-  color: white;
-  float: right;
-  line-height: 80px;
-  margin-right: 40px;
-  cursor: pointer;
-  display: none;
-}
-#check{
-  display: none;
-}
-@media (max-width: 952px){
-  label.logo{
-    font-size: 30px;
-    padding-left: 50px;
-  }
-  nav ul li a{
-    font-size: 16px;
-  }
-}
-@media (max-width: 858px){
-  .checkbtn{
-    display: block;
-  }
-  ul{
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    background:black;
-    margin-top:15px;
-    top: 60px;
-    left: -100%;
-    text-align: center;
-    /* transition: all .5s; */
-  }
-  nav ul li{
-    display: block;
-    margin: 50px 0;
-    line-height: 30px;
-  }
-  nav ul li a{
-    font-size: 20px;
-    opacity: 1;
-    font-weight: bolder;
-  }
-  nav ul li a:hover{
-    transform:scale(1.2);
-   }
-  #check:checked ~ ul{
-    left: 0;
-  }
-}
-section{
-  background:black;
-  background-size: cover;
-  height: calc(100vh - 80px);
-}
-
-
-.navbar-brand a:hover{
-  transform:scale(1.2);
-}
-.dt-button{
-  padding:3px 5px;
-  border: 1px solid rgb(118, 118, 118);
-  border-radius: 2px;
-}
-
-.dt-button:hover{
-  border:1px solid #3931af;
-  transform:1.2;
-  font-weight: bolder;
-}   
-.head{
-	font-size: 25px;
-	font-weight: bold;
-  opacity:1;
-  color:white;
-  letter-spacing:1px;
-}
-.cw{
-  color:white;
-  letter-spacing:0.8px;
-}
-    </style>
-    <nav class="navbar navbar-inverse" id="navbar" style="overflow: hidden;">
-          <input type="checkbox" id="check">
-          <label for="check" class="checkbtn">
-            <i class="fas fa-bars"></i>
-          </label>
-            <label class="logo"><a class="navbar-brand" href="{% url 'store' %}" style="color:white!important;font-size:18px;">Ecom</a></label>
-
-            <ul class="">
-            <li><a href="{% url 'store' %}">Dashboard</a></li>
-            <li style="margin:0 20px;"><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
-            {% if request.session.authenticated %}
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-                <li><a href="{% url 'admin-dashboard' %}">Admin Dashboard</a></li>
-            {% else %}
-                <li><a href="{% url 'registration' %}">Sign Up</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
-            {% endif %}
-            <li><a href="https://rahulgupta1996.pythonanywhere.com/contact/">Any Query</a></li>
-            </ul>
-        </nav>
-        <section></section>
-    <div class="container">
-      <p class="text-left head"> Admin Dashboard </p>
-      <p class="small mb-2 cw"> Manage your products here </p>
-        <div style="margin-top:5px;">
-          <div class="row">
-            <div class="col-md-4" style="margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
-              <strong>
-              <p style="padding-top: 25px;"><span id="head">Add a Product </span> <button type="button" id="reset" onclick="reset_form()">Reset</button></p>
-
-              </strong>
-              <hr>
-                  <form method="POST" id="product-form"  data-toggle="validate" enctype='multipart/form-data' style="max-width:500px;border:1px;">
-                      {% csrf_token %}
-                      <input type="hidden" id="id" name="id">
-                      <input type="hidden" id="action" name="action">
-                      <input class="input-field mb1" type="text" placeholder="Write Product Name" id="name"  name="name" required>
-                      <input class="input-field mb1" type="text" placeholder="Short Product Description" id="description" name="description">
-                      <input class="input-field mb1" type="number" placeholder="Enter Price" id="price" step="0.1" name="price" required>
-                      <input class="input-field mb1" type="file" placeholder="upload a product Image" title="Upload Product Image" id="image" name="image" >
-                      <input type="checkbox"style="margin-left:20px;" id="digital" name="digital"> <small style="padding-bottom: 5px;"> Is this digital product?</small>
-                      <p class="text-danger error {% if not error %} hidden {% endif %}">{{error}}</p>
-                      <p class="text-danger mb1" style="font-size:80%;">* All fields are required.</p>
-                      <button type="submit" class="btn" id="add">Add</button>
-                </form>
-                <br>
-            </div>
-            <div class="col-md-7" style="margin-bottom: 0%;margin-top: 1%;background-color:whitesmoke;margin-right: 10px;">
-              <strong><p style="padding-top: 20px;font-size:18px;">Product List </p></strong><hr>
-              <!-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for a product.."><br> -->
-              <table id="example" class="table row-border order-column" width="100%" style="width:auto" >
-                  <thead>
-                    <th class="text-center">Sr. No.
-
-                    </th>
-                    <th>Porduct Image</th>
-                    <th class="text-center">Product Name </th>
-                    <th class="text-center">Unit Price</th>
-                    <th class="text-center" >Description </th>
-                    <th class="text-center" >No. of Unit Sold </th>
-                    <th data-orderable="false">Action</th>
-                  </thead>
-                  <tbody>
-                    {% for product in products %}
-                      <tr>
-                        <td class="text-center">{{forloop.counter}}</td>
-                        <td class="notexport"><img class="row-image" src="{{product.get_image_url}}" alt="{{product.name}}"></td>
-                        <td class="text-center">{{product.name}}</td></td>
-                        <td class="text-center"> {{product.price | floatformat:2}} </td>
-                        <td class="text-center">
-                          {% if product.description %}
-                            {{ product.description}}
-                          {% else %}
-
-                          {% endif %}
-                        </td>
-                        <td>{{ product.get_total_item_sell}}</td>
-                        <td class="notexport text-center">
-                          <span class="glyphicon update" data-val="add" data-id="{{product.id}}" data-price="{{product.price}}" data-url="{{product.get_image_url}}" title="update a product" data-name="{{product.name}}" data-desc="{{ product.description}}" data-digital="{{ product.digital}}" style="color:green;font-size:75%;font-weight:900;">Update</span>&nbsp;|
-                          <span data-val="{% if product.is_active %}hide{% else %}show{% endif %}" data-id="{{product.id}}" class="glyphicon hide_show" title="hide or show a product on customer dashboard" style="color:rgba(238, 93, 9, 0.938);font-size:75%;font-weight:900;">
-                            {% if product.is_active %}Hide{% else %}Show{% endif %}</span>&nbsp;|
-                          <span data-val="delete" data-id="{{product.id}}" data-url="{{product.get_image_url}}" data-price="{{product.price}}" data-name="{{product.name}}" title="delete a product permanently" data-desc="{{ product.description}}" data-digital="{{ product.digital}}" class="glyphicon delete" style="color:red;font-size:75%;font-weight:900;">Delete</span>
-                        </td>
-                      </tr>
-                    {% endfor %}
-
-                  </tbody>
-                </table>
-            </div>
+                </tbody>
+              </table>
           </div>
         </div>
-    </div>
+      </div>
+  </div>
+{% endblock admin_content %}
 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-      <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-      <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-      
+{% block script %}
+    <script type="text/javascript">
+    function reset_form(){
+      $("#product-form")[0].reset();
+      $("#head").text("Add a Product");
+    }
+    $("section").hide();
+    $(".checkbtn").click(function(){
+        $("section").toggle(700);
+        $(".container").toggle(800);
+      })
 
-      <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-      <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
-      <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+    $("#image").change(function(){
+      $("#image").text(this.files[0].name);
+    });
 
-      <script type="text/javascript">
-      function reset_form(){
-        $("#product-form")[0].reset();
-        $("#head").text("Add a Product");
+    $("#product-form").submit(function(e){
+      e.preventDefault();
+      $("#action").val("add");
+      var id = $("#id").val();
+      var name = $("#name").val();
+      var url = $("#url").val();
+      var price = $("#price").val();
+      var description = $("#description").val();
+      var digital = $("#digital").val();
+      console.log("add ",action,id);
+      var data = new FormData(this);
+      console.log("frm",data)
+      $.ajax({
+        url: '{% url "admin-dashboard" %}',
+        // data:{
+        //   'id':id,
+        //   'action':'add',
+        //   'csrfmiddlewaretoken':'{{ csrf_token }}',
+        //   'name':name,
+        //   'url':url,
+        //   'price':price,
+        //   'desc':description,
+        //   'digital':digital
+        // },
+        data:data,
+        method:"POST",
+        dataType:'json/application',
+        contentType:false,
+        processData:false,
+        success: function(data){
+          console.log(data)
+          window.location.reload();
+        },
+        error: function(data){
+          console.log("error",data);
+          if(data.status==200){
+            window.location.reload();
+          }
+        }
+
+      })
+    })
+
+      $('#example').DataTable({
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "scrollX": true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                title: 'Product List',
+                exportOptions: {
+                    columns: [0, 2, 3, 4,5]
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                title: 'Product List',
+                exportOptions: {
+                    columns: [0, 2, 3, 4,5]
+                },
+                customize : function(doc){ 
+                    doc.styles.tableHeader.alignment = 'center'; 
+                    doc.content[1].table.widths = ["*","*","*","*","*"]; 
+                }
+            },
+            {
+                extend: 'print',
+                title: 'Product List',
+                exportOptions: {
+                    columns: [0, 2, 3, 4,5]
+                },
+                customize : function(doc){ 
+                    doc.styles.tableHeader.alignment = 'center';
+                    doc.content[1].table.widths = ["*","*","*","*","*"]; 
+                }
+            }
+            
+        ]
+        // buttons: [
+        //     'copy', 'csv', 'excel', 'pdf', 'print'
+        // ]
+          });
+
+
+    $(".update").click(function(e){
+      var action = this.getAttribute("data-val");
+      var id = this.getAttribute("data-id");
+      var name = this.getAttribute("data-name");
+      var url = this.getAttribute("data-url");
+      var price = this.getAttribute("data-price");
+      var description = this.getAttribute("data-desc");
+      var digital = this.getAttribute("data-digital");
+      var text = "Update Product - "+name;
+      $("#head").text(text);
+      $("#name").val(name);
+      $("#action").val("add");
+      $("#id").val(id);
+      $("#price").val(parseFloat(price));
+      if(description!="None"){
+        $("#description").val(description);
       }
-      $("section").hide();
-      $(".checkbtn").click(function(){
-          $("section").toggle(700);
-          $(".container").toggle(800);
-        })
+      if(digital=="True"){
+        $("#digital").prop("checked",true);
+      }
+      console.log("add ",url,action,id,name,parseFloat(price),description=="None",typeof(digital));
+    })
 
-      $("#image").change(function(){
-        $("#image").text(this.files[0].name);
-      });
 
-      $("#product-form").submit(function(e){
-        e.preventDefault();
-        $("#action").val("add");
-        var id = $("#id").val();
-        var name = $("#name").val();
-        var url = $("#url").val();
-        var price = $("#price").val();
-        var description = $("#description").val();
-        var digital = $("#digital").val();
-        console.log("add ",action,id);
-        var data = new FormData(this);
-        console.log("frm",data)
-        $.ajax({
-          url: '{% url "admin-dashboard" %}',
-          // data:{
-          //   'id':id,
-          //   'action':'add',
-          //   'csrfmiddlewaretoken':'{{ csrf_token }}',
-          //   'name':name,
-          //   'url':url,
-          //   'price':price,
-          //   'desc':description,
-          //   'digital':digital
-          // },
-          data:data,
-          method:"POST",
-          dataType:'json/application',
-          contentType:false,
-          processData:false,
-          success: function(data){
-            console.log(data)
+    $(".hide_show").click(function(e){
+      var action = this.getAttribute("data-val");
+      var id = this.getAttribute("data-id");
+      console.log("hide show ",action,id);
+      $.ajax({
+        url: '{% url "admin-dashboard" %}',
+        data:{
+          'id':id,
+          'action':action,
+          'csrfmiddlewaretoken':'{{ csrf_token }}',
+          'hide_show':true
+        },
+        method:"POST",
+        dataType:'json/application',
+        success: function(data){
+          console.log(data)
+          window.location.reload();
+        },
+        error: function(data){
+          console.log("error",data);
+          if(data.status==200){
             window.location.reload();
-          },
-          error: function(data){
-            console.log("error",data);
-            if(data.status==200){
-              window.location.reload();
-            }
           }
-
-        })
-      })
-
-        $('#example').DataTable({
-          "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-          "scrollX": true,
-          dom: 'Bfrtip',
-          buttons: [
-              {
-                  extend: 'excelHtml5',
-                  title: 'Product List',
-                  exportOptions: {
-                      columns: [0, 2, 3, 4,5]
-                  }
-              },
-              {
-                  extend: 'pdfHtml5',
-                  title: 'Product List',
-                  exportOptions: {
-                      columns: [0, 2, 3, 4,5]
-                  },
-                  customize : function(doc){ 
-                      doc.styles.tableHeader.alignment = 'center'; 
-                      doc.content[1].table.widths = ["*","*","*","*","*"]; 
-                  }
-              },
-              {
-                  extend: 'print',
-                  title: 'Product List',
-                  exportOptions: {
-                      columns: [0, 2, 3, 4,5]
-                  },
-                  customize : function(doc){ 
-                      doc.styles.tableHeader.alignment = 'center';
-                      doc.content[1].table.widths = ["*","*","*","*","*"]; 
-                  }
-              }
-              
-          ]
-          // buttons: [
-          //     'copy', 'csv', 'excel', 'pdf', 'print'
-          // ]
-            });
-
-
-      $(".update").click(function(e){
-        var action = this.getAttribute("data-val");
-        var id = this.getAttribute("data-id");
-        var name = this.getAttribute("data-name");
-        var url = this.getAttribute("data-url");
-        var price = this.getAttribute("data-price");
-        var description = this.getAttribute("data-desc");
-        var digital = this.getAttribute("data-digital");
-        var text = "Update Product - "+name;
-        $("#head").text(text);
-        $("#name").val(name);
-        $("#action").val("add");
-        $("#id").val(id);
-        $("#price").val(parseFloat(price));
-        if(description!="None"){
-          $("#description").val(description);
         }
-        if(digital=="True"){
-          $("#digital").prop("checked",true);
+
+      })
+    })
+    $(".delete").click(function(e){
+
+      var action = this.getAttribute("data-val");
+      var id = this.getAttribute("data-id");
+      console.log("delete ",action,id);
+      $.ajax({
+        url: '{% url "admin-dashboard" %}',
+        data:{
+          'id':id,
+          'action':'delete',
+          'csrfmiddlewaretoken':'{{ csrf_token }}'
+        },
+        method:"POST",
+        dataType:'json/application',
+        success: function(data){
+          console.log(data)
+          window.location.reload();
+        },
+        error: function(data){
+          console.log("error",data);
+          if(data.status==200){
+            window.location.reload();
+          }
         }
-        console.log("add ",url,action,id,name,parseFloat(price),description=="None",typeof(digital));
+
       })
-
-
-      $(".hide_show").click(function(e){
-        var action = this.getAttribute("data-val");
-        var id = this.getAttribute("data-id");
-        console.log("hide show ",action,id);
-        $.ajax({
-          url: '{% url "admin-dashboard" %}',
-          data:{
-            'id':id,
-            'action':action,
-            'csrfmiddlewaretoken':'{{ csrf_token }}',
-            'hide_show':true
-          },
-          method:"POST",
-          dataType:'json/application',
-          success: function(data){
-            console.log(data)
-            window.location.reload();
-          },
-          error: function(data){
-            console.log("error",data);
-            if(data.status==200){
-              window.location.reload();
-            }
-          }
-
-        })
-      })
-      $(".delete").click(function(e){
-
-        var action = this.getAttribute("data-val");
-        var id = this.getAttribute("data-id");
-        console.log("delete ",action,id);
-        $.ajax({
-          url: '{% url "admin-dashboard" %}',
-          data:{
-            'id':id,
-            'action':'delete',
-            'csrfmiddlewaretoken':'{{ csrf_token }}'
-
-          },
-          method:"POST",
-          dataType:'json/application',
-          success: function(data){
-            console.log(data)
-            window.location.reload();
-          },
-          error: function(data){
-            console.log("error",data);
-            if(data.status==200){
-              window.location.reload();
-            }
-          }
-
-        })
-      })
-      </script>
-</body>
-</html>
+    })
+    </script>
+{% endblock script %}

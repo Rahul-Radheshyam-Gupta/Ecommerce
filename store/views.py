@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,reverse
+from django.shortcuts import render,redirect,reverse,get_object_or_404
 from .models import *
 import  json
 # Create your views here.
@@ -21,12 +21,22 @@ def authenticate_vendor(view_func):
  def wrapper(self,request,*args,**kwargs):
   error = {}
   try:
+
    if request.user.customer.is_vendor:
     print("Yes Vendor authenticated")
     return view_func(self,request,*args,**kwargs)
    else:
     print("right")
     error['error'] = 'You Are not Vendor.Activate Venor Option from Your setting.'
+    
+    # activate vendor setting
+    customer = request.user.customer
+    if 'vendor' in request.GET:
+     print("vendor..")
+     customer.is_vendor=True
+     customer.save()
+	 # activate and redirect to dashboard.. and now customer will able to see admin dashboard option.
+
    return HttpResponseRedirect(reverse('store'))         
   except Exception as e:
    print(str(e))
@@ -41,6 +51,12 @@ class AdminDashboard(TemplateView):
 	@authenticate_vendor
 	def get(self,request):
 		customer = request.user.customer
+		if 'vendor' in request.GET:
+			print("vendor..")
+			customer.is_vendor=True
+			customer.save()
+
+
 		products = Product.objects.filter(added_by=customer)
 		return render(request, self.template_name,{'products':products})
 	def post(self,request):
@@ -79,7 +95,10 @@ class AdminDashboard(TemplateView):
 						)
 			elif request.POST.get("action")=='delete':
 				product = Product.objects.get(id=id)
+				product.features.all().delete()
+				product.orderitem_set.all().delete()
 				product.delete()
+				return HttpResponseRedirect(reverse('admin-dashboard'))
 			else:
 				product = Product.objects.get(id=id)
 				if request.POST.get("action")=='hide':
@@ -211,6 +230,46 @@ def store(request):
 		order["get_total_items"] = get_total_items
 	context['order'] = order
 	return render(request,template_name, context)
+
+def product_detail(request,id=None):
+	product = Product.objects.get(id=id)
+	features = product.features.all()
+	admin = request.GET.get("admin")
+	if admin:
+		return render(request,'store/admin_product_update.html',{'product':product,'features':features})	
+	return render(request,'store/product_detail.html',{'product':product,'features':features})
+
+
+def product_detail_add(request):
+	if request.is_ajax():
+		id = request.POST.get('id')
+		id = id if id else request.POST.get('product-id')
+		print(type(id))
+		feature = request.POST.get("feature")
+		product = Product.objects.get(id=id)
+		ProductFeatures.objects.create(product=product,feature=feature)
+		features = product.features.values_list('id','feature')
+		features = [str(i) for i in features]
+		product = {'id':product.id,'name':product.name,'description':product.description}
+		data  = {'product':product,'features':features}
+		
+		json_data = json.dumps(data)
+		return JsonResponse(json_data,safe=False)
+	return redirect(reverse('admin-dashboard'))
+
+def product_feature_delete(request,id):
+	print(id,request.GET)
+	try:
+		feature = ProductFeatures.objects.get(id=id)
+		product_id = feature.product.id
+		feature.delete()
+	except :
+		pass
+	product = Product.objects.get(id=request.GET.get('product-id'))
+	features = product.features.all()
+	if features.count() > 0:
+		return render(request,'store/admin_product_update.html',{'product':product,'features':features})
+	return redirect(reverse('admin-dashboard'))
 
 
 def cart(request):

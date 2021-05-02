@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecom - Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse" id="navbar" style="overflow: hidden;">
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+          <i class="fas fa-bars"></i>
+        </label>
+          <label class="logo"><a class="navbar-brand" href="{% url 'store' %}" style="color:white!important;font-size:18px;">Ecom</a></label>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'store' %}">Dashboard</a></li>
+          <li style="margin:0 20px;"><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
+          {% if request.session.authenticated %}
+              <li><a href="{% url 'logout' %}"> Logout</a></li>
+              <li><a href="{% url 'admin-dashboard' %}">Admin Page</a></li>
+          {% else %}
+              <li><a href="{% url 'registration' %}"> Sign Up</a></li>
+              <li><a href="{% url 'login' %}"> Login</a></li>
+          {% endif %}
+          <li><a href="https://rahulgupta1996.pythonanywhere.com/contact/">Any Query</a></li>
+          </ul>
+      </nav>
+      <section></section>
+
+{% block admin_content %}
+
+{% endblock admin_content %}
+<footer class="mx-auto" style="margin:25px 0;">
+  <p class="text-center cw">&copy; Copyright 2020-2021 by <strong><a href="https://rahulgupta1996.pythonanywhere.com/" style="text-decoration:none;color:white;">Rahul Gupta</a></strong>&nbsp;-&nbsp;&nbsp;
+        <a href="https://www.linkedin.com/in/rahul-gupta-1b2578170/" target="_blank"  style="text-decoration: none;" > <i class="fab fa-linkedin"></i>&nbsp;</a>&nbsp;
+        <a href="https://github.com/Rahul-Radheshyam-Gupta" target="_blank"  style="text-decoration: none;" > <i class="fab fa-github-square"></i>  &nbsp;</a>
+      </p>
+</footer>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+      <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+      
+
+      <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+      <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
+      <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+
+    {% block script %}
+
+    {% endblock script %}
+</body>
+</html>

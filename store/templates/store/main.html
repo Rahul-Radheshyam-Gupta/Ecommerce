@@ -43,7 +43,7 @@
 	</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eccomerce</title>
+    <title>Ecom</title>
     <link href="{% static 'css/main.css' %}" type="text/css" rel="stylesheet">
     <!-- added as boot.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -227,7 +227,14 @@ section{
             <!-- <li><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li> -->
             {% if request.session.authenticated %}
               <li><a href="{% url 'logout' %}">Logout</a></li>
-              <li><a href="{% url 'admin-dashboard' %}">Admin Dashboard</a></li>
+              <!-- <li><a href="{% url 'admin-dashboard' %}">Admin Dashboard</a></li> -->
+              {% if request.user.customer.is_vendor %}
+              <li><a href="{% url 'admin-dashboard' %}">Admin Page</a></li>
+              {% else %}
+              <li><a data-toggle="modal" data-target="#be_part_of_ecom">Be Part of Ecom</a></li>
+              {% endif %}
+
+
               <!-- <span class="glyphicon glyphicon-log-in"></span>  -->
             {% else %}
               <li><a href="{% url 'registration' %}"> Sign Up</a></li>
@@ -246,6 +253,39 @@ section{
 
                 {% endblock content %}
           </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="be_part_of_ecom" tabindex="-1" role="dialog" aria-labelledby="be_part_of_ecom" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Activate Admin Dashboard</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        This is a special feature for you o become a part of Ecom.
+        What You can do on Ecom.
+        <ol type="">
+          <li>
+           >>  Sell Your Product on Ecom
+          </li>
+          <li>
+            >> Download Reports of Your product list
+          </li>
+        </ol>
+        <strong>Note</strong>
+        <p> You must read our t&c before activating this feature. </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="{% url 'admin-dashboard' %}?vendor=True"  class="btn btn-primary">Agree</a>
+      </div>
+    </div>
+  </div>
+</div>
           <footer class="mx-auto">
             <p class="text-center cw">&copy; Copyright 2020-2021 by <strong><a href="https://rahulgupta1996.pythonanywhere.com/" style="text-decoration:none;color:white;">Rahul Gupta</a></strong>&nbsp;-&nbsp;&nbsp;
                   <a href="https://www.linkedin.com/in/rahul-gupta-1b2578170/" target="_blank"  style="text-decoration: none;" > <i class="fab fa-linkedin"></i>&nbsp;</a>&nbsp;
