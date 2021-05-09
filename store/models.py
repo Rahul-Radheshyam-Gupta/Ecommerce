@@ -9,6 +9,8 @@ class Customer(models.Model):
 	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
 	name = models.CharField(max_length=200, null=True,blank=True)
 	email = models.CharField(max_length=200)
+	auth_token = models.CharField(max_length=100,null=True,blank=True)
+	is_verified = models.BooleanField(default=False)
 	is_vendor = models.BooleanField(default=False) # new 
 	def __str__(self):
 		return self.name

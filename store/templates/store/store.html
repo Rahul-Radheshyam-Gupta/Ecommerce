@@ -40,9 +40,8 @@ border:1px solid #195;}
 			<div class="col-lg-4" style="margin-bottom: 10px;">
 				<img class="thumbnail" src="{{product.get_image_url}}">
 				<div class="box-element product" style="background-color:whitesmoke!important;">
-					<h6><strong>{{product.name}} {{ product.url }}</strong></h6>
-					<hr>
-					<button  class="btn btn-primary add-btn update-cart" data-product="{{product.id}}" data-action="add">Add to Cart</button>
+					<h4><strong>{{product.name}} {{ product.url }}</strong></h4>
+					<button  class="btn btn-primary btn-small add-btn update-cart" data-product="{{product.id}}" data-action="add">Add to Cart</button>
 					<a class="btn btn-outline-secondary view"  href="{% url 'product-detail' product.id %}">View</a>
 					<h4 style="display: inline-block; float: right"><strong>Rs. {{product.price|floatformat:2}}</strong></h4>
 

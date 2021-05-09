@@ -319,7 +319,7 @@
     transform:scale(1.5);
     }
     .disabled {
-        background: #dddddd;
-        pointer-events: none;
-        }
+    background: #dddddd;
+    pointer-events: none;
+    }
 
