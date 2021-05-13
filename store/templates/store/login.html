@@ -140,14 +140,14 @@ padding:10px 15px;
               </div>
               <div class="form-group">
                   <label for="exampleInputPassword1">Password</label>
-                  <a href="#" style="float:right;font-size:12px;">Forgot password?</a>
+                  <a  class="hidden" style="float:right;font-size:12px;">Forgot password?</a>
                   <input class="form-control form-control-sm" type="password" placeholder="Password" name="password" required>
               </div>
               <button type="submit" class="btn btn-primary btn-block">Sign in</button>
               
               <div class="sign-up">
                   Don't have an account? 
-                  <a >Create One</a>
+                  <a href={% url 'registration' %} >Create One</a>
               </div>
           </form>
       </div>
