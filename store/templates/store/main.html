@@ -225,14 +225,13 @@ footer{
             <label class="logo"><a class="navbar-brand" href="{% url 'store' %}" style="">Ecom</a></label>
 
           <ul class="">
-            <li><a href="{% url 'store' %}">Dashboard</a></li>
             <li><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
             <!-- <li><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li> -->
             {% if request.session.authenticated %}
               <li><a href="{% url 'logout' %}">Logout</a></li>
               <!-- <li><a href="{% url 'admin-dashboard' %}">Admin Dashboard</a></li> -->
               {% if request.user.customer.is_vendor %}
-              <li><a href="{% url 'admin-dashboard' %}">Admin Page</a></li>
+              <li><a href="{% url 'admin-dashboard' %}">Admin Dashboard</a></li>
               {% else %}
               <li><a data-toggle="modal" data-target="#be_part_of_ecom">Be Part of Ecom</a></li>
               {% endif %}
@@ -243,6 +242,7 @@ footer{
               <li><a href="{% url 'registration' %}"> Sign Up</a></li>
               <li><a href="{% url 'login' %}">Login</a></li>
             {% endif %}
+            <li><a data-toggle="modal" data-target="#exampleModalLong">Feature</a></li>
             <li><a href="https://rahulgupta1996.pythonanywhere.com/contact/">Any Query</a></li>
           </ul>
       </nav>
@@ -256,6 +256,40 @@ footer{
 
                 {% endblock content %}
           </div>
+
+<!-- Button trigger modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Features of Ecom</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <ol>
+            <li>1.&nbsp;  As a Customer : You can buy a product as customer.</li>
+            <li>2.&nbsp;  As a Seller : You can sell your product on Ecom.</li>
+            <li>3.&nbsp;  What an admin can do on Ecom?
+              <ol style='padding-left: 10px;padding-bottom: 5px;'>
+                <li>3.1.&nbsp;  Admin Dashboard </li>
+                <li>3.2.&nbsp;  Manage Your Products</li>
+                <li>3.3.&nbsp; Control Your Product's Visibility </li>
+                <li>3.4.&nbsp;  Quick Product Analytics</li>
+                <li>3.5.&nbsp;   Download Product List in Excel/Pdf format</li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" style="padding:5px 20px;" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <!-- Modal -->

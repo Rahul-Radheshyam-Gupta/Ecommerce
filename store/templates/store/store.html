@@ -36,7 +36,7 @@ border:1px solid #195;}
 <p class="text-left head"> Dashboard </p><small class="text-left cw" style='margin-left: 10px;'> List of available products based on your recent activities </small>
 
 	{% for product in products %}
-		<div class=" {% if forloop.counter|divisibleby:3 %} row {% endif %}">
+		<div class=" {% if forloop.counter|divisibleby:3 %}  {% endif %}">
 			<div class="col-lg-4" style="margin-bottom: 10px;">
 				<img class="thumbnail" src="{{product.get_image_url}}">
 				<div class="box-element product" style="background-color:whitesmoke!important;">

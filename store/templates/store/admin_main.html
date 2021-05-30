@@ -24,7 +24,7 @@
           <li style="margin:0 20px;"><a href="{% url 'cart' %}"><img src="{% static 'images/cart.png' %}" style="width:20px;height: 100%;">Cart  <sup><span id="" class="cart-t cart">{{order.get_total_items}}</span></sup></a></li>
           {% if request.session.authenticated %}
               <li><a href="{% url 'logout' %}"> Logout</a></li>
-              <li><a href="{% url 'admin-dashboard' %}">Admin Page</a></li>
+              <li><a href="{% url 'admin-dashboard' %}">Admin Dashboard</a></li>
           {% else %}
               <li><a href="{% url 'registration' %}"> Sign Up</a></li>
               <li><a href="{% url 'login' %}"> Login</a></li>
